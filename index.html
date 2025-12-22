@@ -1,0 +1,2856 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameChemini - Thế Giới Game</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- 1. CẤU HÌNH GIAO DIỆN --- */
+        :root {
+            --bg-color: #030b17;
+            --sidebar-bg: #0b0f14;
+            --text-color: #ffffff;
+            --accent-color: #000080;
+            --highlight: #1e90ff;
+            --card-bg: #0d1624;
+            --green: #2ecc71;
+            --gold: #f1c40f;
+            --footer-bg: #05080c;
+        }
+        .login-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+#about .video-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.banner-slider {
+    position: relative;
+    width: 100%;
+    height: 600px; /* chỉnh chiều cao banner */
+    overflow: hidden;
+}
+
+.banner-slider .slides img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* giữ tỉ lệ ảnh */
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    transition: opacity 0.8s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    border: 3px solid transparent;
+    border-radius: 10px;
+}
+
+/* highlight khi hover */
+.banner-slider .slides img:hover {
+    border-color: #00ffff;
+    box-shadow: 0 0 20px #00ffff;
+}
+
+/* chỉ ảnh hiện ra */
+.banner-slider .slides img.active {
+    opacity: 1;
+}
+
+
+
+.login-box {
+    background: #111;
+    padding: 25px;
+    width: 320px;
+    border-radius: 16px;
+    color: white;
+    text-align: center;
+    animation: pop 0.25s ease;
+}
+
+@keyframes pop {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.login-box h2 {
+    margin-bottom: 15px;
+}
+
+.login-box input {
+    width: 100%;
+    padding: 10px;
+    margin: 6px 0;
+    border-radius: 8px;
+    border: none;
+}
+
+.social {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    margin: 6px 0;
+    color: white;
+    cursor: pointer;
+}
+
+.fb { background: #1877f2; }
+.gg { background: #db4437; }
+
+.login-main {
+    background: #6a5af9;
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    width: 100%;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.guest {
+    margin-top: 8px;
+    background: transparent;
+    color: #aaa;
+    border: none;
+    cursor: pointer;
+}
+
+.divider {
+    margin: 10px 0;
+    font-size: 12px;
+    color: #888;
+}
+
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; scroll-behavior: smooth; }
+        body { background-color: var(--bg-color); color: var(--text-color); display: flex; min-height: 100vh; overflow-x: hidden; }
+        a { text-decoration: none; color: inherit; }
+
+
+        /* --- 2. SIDEBAR --- */
+        .sidebar {
+            width: 250px; background-color: var(--sidebar-bg); height: 100vh; position: fixed;
+            left: 0; top: 0; display: flex; flex-direction: column; padding: 20px;
+            border-right: 1px solid #1f2937; z-index: 1000;
+        }
+        .logo { text-align: center; margin-bottom: 40px; }
+        .logo h2 { font-size: 24px; color: #ccc; letter-spacing: 1px; }
+        .logo i { font-size: 40px; margin-bottom: 10px; color: #fff; }
+        .nav-links { list-style: none; flex-grow: 1; }
+        .nav-links a {
+            display: block; padding: 15px 20px; color: #a0a0a0; text-decoration: none;
+            border-radius: 5px; transition: 0.3s; font-weight: 500; margin-bottom: 5px;
+        }
+        .nav-links a:hover, .nav-links a.active {
+            background-color: var(--accent-color); color: #fff; border-left: 4px solid var(--highlight);
+        }
+
+
+        /* --- 3. MAIN CONTENT --- */
+        .main-content { margin-left: 250px; width: calc(100% - 250px); padding: 0; display: flex; flex-direction: column; min-height: 100vh;}
+       
+        .content-wrapper { padding: 20px 40px; flex: 1; } /* Wrapper để đẩy footer xuống đáy */
+
+
+        /* STICKY HEADER (MỚI) */
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 40px;
+            background-color: rgba(3, 11, 23, 0.95); /* Nền bán trong suốt */
+            backdrop-filter: blur(10px); /* Hiệu ứng mờ */
+            position: sticky; /* Dính */
+            top: 0;
+            z-index: 900;
+            border-bottom: 1px solid #1f2937;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+       
+        .search-bar { position: relative; width: 400px; }
+        .search-bar input {
+            width: 100%; padding: 10px 40px 10px 15px; border-radius: 20px;
+            border: 1px solid #333; background-color: #0f1824; color: #fff; outline: none;
+        }
+        .search-bar i { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #aaa; }
+        .cart-icon { position: relative; cursor: pointer; font-size: 24px; transition: 0.2s; }
+        .cart-icon:hover { color: var(--highlight); }
+        .cart-count {
+            position: absolute; top: -8px; right: -8px; background-color: red; color: white;
+            font-size: 12px; width: 18px; height: 18px; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .login-btn {
+    background: linear-gradient(135deg, #6a5af9, #8f44fd);
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-left: 10px;
+    transition: 0.2s;
+}
+.login-btn:hover {
+    opacity: 0.9;
+}
+
+
+        /* --- 4. GAME GRID & CARD --- */
+        .page-section { display: none; animation: fadeIn 0.4s; }
+        .page-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+
+        .banner {
+            height: 350px; background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.8)), url('https://placehold.co/1200x400/051e3e/FFF?text=GAME+CHEMINI');
+            background-size: cover; background-position: center; border-radius: 10px;
+            display: flex; justify-content: center; align-items: center; flex-direction: column; margin-bottom: 40px;
+        }
+        .banner h1 { font-size: 48px; text-transform: uppercase; text-shadow: 0 0 10px rgba(0,0,0,0.8); }
+
+
+        .section-heading {
+            font-size: 24px; margin: 40px 0 20px; padding-left: 10px; border-left: 4px solid var(--highlight); color: #fff;
+        }
+       
+        .game-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 20px; }
+        .game-card {
+            background-color: var(--card-bg); border-radius: 8px; overflow: hidden;
+            transition: 0.3s; cursor: pointer; border: 1px solid #1f2937; position: relative;
+        }
+        .game-card:hover { transform: translateY(-5px); border-color: var(--highlight); box-shadow: 0 5px 15px rgba(30, 144, 255, 0.2); }
+        .game-img { width: 100%; height: 140px; object-fit: cover; }
+        .game-info { padding: 12px; }
+        .game-title { font-size: 15px; font-weight: bold; margin-bottom: 5px; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .game-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+        .price { color: var(--green); font-weight: bold; font-size: 14px; }
+       
+        .btn-card-add {
+            background: var(--highlight); color: #fff; border: none; width: 30px; height: 30px; border-radius: 5px; cursor: pointer; transition: 0.2s;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .btn-card-add:hover { background: #fff; color: var(--highlight); }
+        .tag-overlay { position: absolute; top: 10px; left: 10px; background: red; color: white; padding: 2px 8px; font-size: 10px; border-radius: 3px; font-weight: bold; }
+
+
+        /* --- 5. GAME DETAIL --- */
+        .detail-header { margin-bottom: 20px; display: flex; justify-content: space-between; align-items: end; border-bottom: 1px solid #333; padding-bottom: 20px; }
+        .detail-title { font-size: 40px; font-weight: bold; }
+        .detail-genre { color: #aaa; font-size: 16px; margin-top: 5px; }
+       
+        .detail-container { display: flex; gap: 40px; flex-wrap: wrap; }
+        .detail-left { flex: 2; min-width: 300px; }
+        .detail-right { flex: 1; min-width: 300px; }
+        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 10px; margin-bottom: 20px; border: 1px solid #333; }
+        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        .content-box { margin-bottom: 30px; background: #0b0f14; padding: 20px; border-radius: 8px; }
+        .content-box h3 { font-size: 20px; margin-bottom: 15px; color: var(--highlight); }
+        .content-box p { color: #ccc; line-height: 1.6; font-size: 15px; }
+        .specs-table { width: 100%; border-collapse: collapse; font-size: 14px; color: #ccc; }
+        .specs-table td { padding: 8px 0; border-bottom: 1px solid #222; }
+        .specs-label { font-weight: bold; color: #fff; width: 130px; }
+        .action-box { background: #16202e; padding: 25px; border-radius: 10px; border: 1px solid var(--highlight); position: sticky; top: 100px; text-align: center; }
+        .detail-thumb { width: 100%; border-radius: 8px; margin-bottom: 15px; }
+        .big-price { font-size: 32px; color: var(--green); font-weight: bold; margin-bottom: 20px; display: block; }
+        .btn-full { width: 100%; padding: 15px; margin-bottom: 10px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 16px; transition: 0.2s; }
+        .btn-download { background: #fff; color: #000; }
+        .btn-cart { background: var(--highlight); color: #fff; }
+        .btn-cart:hover { background: #0056b3; }
+       
+        /* Review Section */
+        .review-section { margin-top: 30px; }
+        .review-input { background: #16202e; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+        .review-input textarea { width: 100%; background: #0b0f14; border: 1px solid #333; color: #fff; padding: 10px; border-radius: 5px; margin-bottom: 10px; resize: vertical; }
+        .star-rating { display: flex; gap: 5px; margin-bottom: 10px; cursor: pointer; }
+        .star-rating i { color: #555; font-size: 20px; transition: 0.2s; }
+        .star-rating i.active { color: var(--gold); }
+        .review-list { display: flex; flex-direction: column; gap: 15px; }
+        .review-item { background: #0d1624; padding: 15px; border-radius: 8px; border-left: 3px solid var(--highlight); }
+        .user-name { font-weight: bold; color: #fff; margin-bottom: 5px; display: flex; justify-content: space-between; }
+        .user-star { color: var(--gold); font-size: 12px; }
+        .user-comment { color: #ccc; font-size: 14px; margin-top: 5px; }
+
+
+        /* --- 6. MODALS --- */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-content { background: #1a2634; width: 400px; padding: 30px; border-radius: 10px; border: 1px solid #444; position: relative; text-align: center; }
+        .close-modal { position: absolute; top: 10px; right: 15px; color: #aaa; cursor: pointer; font-size: 20px; }
+        #cart-modal-container { align-items: flex-start; justify-content: flex-end; padding-top: 80px; padding-right: 40px; }
+        #cart-box { pointer-events: auto; width: 320px; background: #1a2634; border: 1px solid #444; padding: 20px; border-radius: 8px; }
+        #cart-items { list-style: none; max-height: 200px; overflow-y: auto; margin: 15px 0; border-top: 1px solid #333; text-align: left; }
+        #cart-items li { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #333; font-size: 14px; }
+        .qr-img { width: 250px; height: 250px; margin: 20px auto; border: 5px solid #fff; border-radius: 10px; display: block; }
+       
+        /* --- 7. FOOTER (MỚI) --- */
+        footer {
+            background-color: var(--footer-bg);
+            border-top: 1px solid #1f2937;
+            padding: 40px 40px 20px;
+            margin-top: 50px;
+        }
+        .footer-content { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 30px; margin-bottom: 30px; }
+        .footer-col { flex: 1; min-width: 200px; }
+        .footer-col h3 { font-size: 18px; margin-bottom: 15px; color: #fff; }
+        .footer-col ul { list-style: none; }
+        .footer-col ul li { margin-bottom: 10px; }
+        .footer-col ul li a { color: #aaa; transition: 0.3s; font-size: 14px; }
+        .footer-col ul li a:hover { color: var(--highlight); padding-left: 5px; }
+        .social-icons a { display: inline-block; margin-right: 15px; font-size: 20px; color: #aaa; transition: 0.3s; }
+        .social-icons a:hover { color: #fff; }
+        .footer-bottom { text-align: center; padding-top: 20px; border-top: 1px solid #333; color: #777; font-size: 13px; }
+
+
+        /* --- 8. MEMBER CARDS (LINK) --- */
+        .member-card { transition: 0.3s; cursor: pointer; }
+        .member-card:hover { transform: translateY(-5px); }
+        .member-card:hover img {
+    transform: scale(1.08);
+    box-shadow: 0 0 15px var(--highlight);
+}
+
+        .member-card img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--highlight);
+    transition: 0.3s;
+}
+        .member-info { color: #fff; }
+        .member-info small { color: #aaa; }
+
+
+        /* --- 9. NÚT QUAY LẠI & SCROLL TOP --- */
+        .btn-back { background: rgba(255,255,255,0.1); border: 1px solid #444; color: #fff; padding: 8px 15px; border-radius: 20px; cursor: pointer; margin-bottom: 20px; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-back:hover { background: var(--highlight); border-color: var(--highlight); }
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;          /* khoảng cách giữa giỏ và login */
+}
+
+
+        #scroll-top {
+            position: fixed; bottom: 30px; right: 30px; background: var(--highlight); color: #fff;
+            width: 50px; height: 50px; border-radius: 50%; border: none; cursor: pointer;
+            display: none; justify-content: center; align-items: center; font-size: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 990; transition: 0.3s;
+        }
+        #scroll-top:hover { transform: translateY(-5px); background: #0056b3; }
+       
+        .contact-container { 
+        display: grid; 
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); 
+        gap: 40px; 
+        margin-top: 20px;
+    }
+
+    .contact-box { 
+        background: rgba(13, 22, 36, 0.7); 
+        backdrop-filter: blur(10px);
+        padding: 40px; 
+        border-radius: 20px; 
+        border: 1px solid rgba(255, 255, 255, 0.1); 
+        transition: 0.4s;
+    }
+
+    .contact-box:hover {
+        border-color: var(--highlight);
+        transform: translateY(-10px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+    }
+
+    .form-group {
+        width: 100%;
+        background: rgba(15, 24, 36, 0.8);
+        border: 1px solid #1f2937;
+        color: white;
+        padding: 12px 15px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        outline: none;
+        transition: 0.3s;
+    }
+
+    .form-group:focus {
+        border-color: var(--highlight);
+        background: #0f1824;
+    }
+
+    .contact-info-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-top: 20px;
+        color: #aaa;
+    }
+    .search-suggest {
+    position: absolute;
+    top: 45px;
+    width: 100%;
+    background: #0f1824;
+    border: 1px solid #333;
+    border-radius: 8px;
+    z-index: 999;
+    display: none;
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.search-suggest div {
+    padding: 10px 15px;
+    cursor: pointer;
+    color: #ccc;
+}
+
+.search-suggest div:hover {
+    background: #1e293b;
+    color: #fff;
+}
+
+  .login-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.login-box {
+    width: 380px;
+    background: linear-gradient(145deg, #0f172a, #020617);
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 0 40px rgba(0,0,0,0.8);
+    animation: pop 0.3s ease;
+}
+
+@keyframes pop {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.login-box h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #38bdf8;
+}
+
+.login-box input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    border: none;
+    background: #020617;
+    color: #fff;
+    outline: none;
+}
+
+.login-main {
+    width: 100%;
+    padding: 12px;
+    background: #38bdf8;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.login-main:hover {
+    background: #0ea5e9;
+}
+
+.login-box a {
+    color: #38bdf8;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.login-box a:hover {
+    text-decoration: underline;
+}
+
+.guest {
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px;
+    background: transparent;
+    border: 1px solid #38bdf8;
+    color: #38bdf8;
+    border-radius: 8px;
+    cursor: pointer;
+}
+  
+    
+    
+    
+    </style>
+</head>
+<body>
+
+
+    <div class="sidebar">
+        <div class="logo">
+            <i class="fa-solid fa-gamepad"></i>
+            <h2>GameChemini</h2>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#" onclick="showPage('home')" class="active" id="nav-home">Trang chủ</a></li>
+            <li><a href="#" onclick="showPage('plan')" id="nav-plan">Our Plan</a></li>
+            <li><a href="#" onclick="showPage('about')" id="nav-about">About Us</a></li>
+            <li><a href="#" onclick="showPage('contact')" id="nav-contact">Contact</a></li>
+        </ul>
+    </div>
+
+
+    <div class="main-content">
+        <header>
+            <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="Tìm kiếm game..." onkeyup="handleSearchInput()">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <div id="search-suggest" class="search-suggest"></div>
+</div>
+
+            <div class="header-actions">
+    <div class="cart-icon" onclick="toggleCart()">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span class="cart-count" id="cartCount">0</span>
+    </div>
+
+    <button id="loginBtn" class="login-btn" onclick="openLogin()">
+        <i class="fa-solid fa-user"></i> Đăng nhập
+    </button>
+</div>
+
+        </header>
+        
+
+        <div class="content-wrapper">
+
+
+            <div id="cart-modal-container" class="modal">
+                <div id="cart-box">
+                    <span class="close-modal" onclick="toggleCart()">&times;</span>
+                    <h3>Giỏ hàng</h3>
+                    <ul id="cart-items"><li>Giỏ hàng trống</li></ul>
+                    <p>Tổng: <span id="cart-total" style="color: #4cd137; font-weight: bold;">0 đ</span></p>
+                    <button class="btn-full btn-cart" style="margin-top: 15px;" onclick="openPayment()">Thanh Toán</button>
+                </div>
+            </div>
+
+
+            <div id="payment-modal" class="modal">
+                <div class="modal-content">
+                    <span class="close-modal" onclick="closePayment()">&times;</span>
+                    <h2 style="color: var(--highlight);">Quét mã để thanh toán</h2>
+                    <p style="color: #ccc; font-size: 14px; margin-bottom: 10px;">Mở ứng dụng ngân hàng và quét mã</p>
+                    <img id="qr-code-img" src="" class="qr-img" alt="QR Code">
+                    <h3 id="pay-amount" style="color: var(--green); margin-bottom: 20px;">0 đ</h3>
+                    <button class="btn-full btn-download" onclick="showSuccessModal(); closePayment();">Đã chuyển khoản</button>
+                </div>
+            </div>
+
+
+            <section id="home" class="page-section active">
+                <!-- Banner Slider -->
+<div class="banner-slider">
+    <div class="slides">
+        <img src="mc.jpg" alt="minecraft" data-id="minecraft" class="active">
+        <img src="elden.jpg" alt="eldenring" data-id="eldenring">
+        <img src="Black Myth Wukong.jpg" alt="blackmyth" data-id="blackmyth">
+        <img src="Final Fantasy VII Rebirth.jpg" alt="ff7rebirth" data-id="ff7rebirth">
+        <img src="Genshin Impact.jpg" alt="genshin" data-id="genshin">
+        <img src="League of Legends.jpg" alt="lol" data-id="lol">
+        <img src="Little Nightmares III.jpg" alt="littlenightmares3" data-id="littlenightmares3">
+        <img src="Diablo II.jpg" alt="diablo2" data-id="diablo2">
+    </div>
+</div>
+
+
+
+
+
+                <div class="section-heading">Mới phát hành</div>
+                <div class="game-grid" id="new-list"></div>
+
+
+                <div class="section-heading">Xu hướng (Hot)</div>
+                <div class="game-grid" id="trending-list"></div>
+
+
+                <div class="section-heading">Bán chạy nhất</div>
+                <div class="game-grid" id="best-list"></div>
+
+
+                <div class="section-heading">Sắp ra mắt</div>
+                <div class="game-grid" id="upcoming-list"></div>
+
+
+                <div class="section-heading">Game Cổ điển</div>
+                <div class="game-grid" id="classic-list"></div>
+            </section>
+
+
+            <section id="game-detail" class="page-section">
+                <button class="btn-back" onclick="showPage('home')">
+                    <i class="fa-solid fa-arrow-left"></i> Quay lại
+                </button>
+               
+                <div class="detail-header">
+                    <div>
+                        <div class="detail-title" id="d-title">Tên Game</div>
+                        <div class="detail-genre" id="d-genre">Thể loại</div>
+                    </div>
+                </div>
+
+
+                <div class="detail-container">
+                    <div class="detail-left">
+                        <div class="video-wrapper">
+                            <iframe id="d-video" src="" frameborder="0" allowfullscreen></iframe>
+                        </div>
+
+
+                        <div class="content-box">
+                            <h3>Nội dung</h3>
+                            <p id="d-desc">Mô tả game...</p>
+                        </div>
+                       
+                        <div class="content-box">
+                            <h3>Cấu hình yêu cầu</h3>
+                            <table class="specs-table">
+                                <tr><td class="specs-label">Hệ điều hành:</td><td id="s-os">Win 10</td></tr>
+                                <tr><td class="specs-label">CPU:</td><td id="s-cpu">Core i3</td></tr>
+                                <tr><td class="specs-label">RAM:</td><td id="s-ram">8 GB</td></tr>
+                                <tr><td class="specs-label">VGA:</td><td id="s-vga">GTX 1050</td></tr>
+                                <tr><td class="specs-label">Dung lượng:</td><td id="s-storage">20 GB</td></tr>
+                            </table>
+                        </div>
+
+
+                        <div class="content-box review-section">
+                            <h3>Đánh giá từ cộng đồng</h3>
+                            <div class="review-input">
+                                <div style="margin-bottom: 10px;">Chọn số sao:
+                                    <div class="star-rating" id="star-input">
+                                        <i class="fa-solid fa-star" onclick="selectStar(1)"></i>
+                                        <i class="fa-solid fa-star" onclick="selectStar(2)"></i>
+                                        <i class="fa-solid fa-star" onclick="selectStar(3)"></i>
+                                        <i class="fa-solid fa-star" onclick="selectStar(4)"></i>
+                                        <i class="fa-solid fa-star" onclick="selectStar(5)"></i>
+                                    </div>
+                                </div>
+                                <textarea id="review-text" rows="3" placeholder="Viết cảm nhận của bạn..."></textarea>
+                                <button class="btn-full btn-cart" style="width: auto; padding: 10px 30px;" onclick="submitReview()">Gửi đánh giá</button>
+                            </div>
+                            <div class="review-list" id="review-container"></div>
+                        </div>
+                    </div>
+
+
+                    <div class="detail-right">
+                        <div class="action-box">
+                            <img src="" id="d-img-thumb" class="detail-thumb">
+                            <span class="big-price" id="d-price">0 đ</span>
+                            <button class="btn-full btn-download" onclick="handleDownload()">Tải Game</button>
+
+                            <button class="btn-full btn-cart" id="btn-add-detail">Thêm vào giỏ</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <section id="plan" class="page-section">
+                <div class="banner" style="height: 200px;"><h1>Our Plan</h1></div>
+                <p style="color:#aaa; text-align: center; margin-bottom: 30px;">Dự án game của nhóm</p>
+                <div class="game-grid" id="plan-list"></div>
+            </section>
+
+
+            <section id="about" class="page-section">
+                <div class="banner" style="background-image: url('https://placehold.co/1200x400/030b17/FFF?text=ABOUT+US');"><h1></h1></div>
+                
+                <div class="about-container" style="max-width: 1000px; margin: 0 auto; padding: 40px; background: rgba(13, 22, 36, 0.6); border-radius: 15px; border: 1px solid #1f2937; margin-bottom: 50px;">
+                    
+                    <div style="text-align: center; margin-bottom: 40px;">
+                        <h2 style="color: #fff; font-size: 32px; margin-bottom: 10px; text-transform: uppercase;">Chào mừng đến với GameChemini</h2>
+                        <h3 style="color: var(--highlight); font-size: 20px; font-weight: normal;">Nơi ý tưởng hóa thành hiện thực</h3>
+                    </div>
+
+                    <p style="text-align: center; color: #ddd; font-size: 16px; margin-bottom: 50px; line-height: 1.8;">
+                        Xin chào! Chúng tôi là GameChemini, một nhóm những người trẻ có chung niềm đam mê mãnh liệt: Không chỉ chơi game, chúng tôi muốn tạo ra thế giới của riêng mình.
+                    </p>
+
+                    <div style="display: flex; gap: 50px; align-items: center; margin-bottom: 50px; flex-wrap: wrap;">
+                        <div style="flex: 1; text-align: center; min-width: 250px;">
+                            <i class="fa-solid fa-gamepad" style="font-size: 120px; color: #fff;"></i>
+                            <h2 style="margin-top: 15px; font-size: 36px; font-weight: bold; letter-spacing: 2px;">GameChemini</h2>
+                        </div>
+                        <div style="flex: 2; color: #ccc; line-height: 1.8; font-size: 16px; min-width: 300px; text-align: justify;">
+                            Được thành lập từ những ngày đầu làm đồ án môn Nhập môn Công nghệ thông tin, nhóm chúng tôi quy tụ 7 thành viên với những cá tính khác nhau, từ những dòng code khô khan đến những nét vẽ bay bổng.
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 40px; flex-wrap: wrap; color: #ccc; line-height: 1.6; font-size: 15px;">
+                        <div style="flex: 1; min-width: 300px; text-align: justify;">
+                            <p>• Dù xuất phát điểm và thế mạnh khác nhau, nhưng mục tiêu của chúng tôi là duy nhất: Tạo ra các sản phẩm game không chỉ hay về gameplay mà còn chỉn chu về trải nghiệm. Kèm theo đó là website hội chợ game là tập hợp các game từ nhiều nơi khác nhau về trên trang web của chúng tôi.</p>
+                        </div>
+                        <div style="flex: 1; min-width: 300px; text-align: justify;">
+                            <p>• Hai sản phẩm này là đứa con tinh thần đầu tiên của nhóm, được xây dựng hoàn toàn bằng nỗ lực tự học và khám phá công nghệ mới. Qua dự án này, chúng tôi muốn chứng minh rằng: Với đam mê và sự đoàn kết, mọi ý tưởng đều có thể cất cánh.</p>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align: center; max-width: 800px; margin: 0 auto 50px;">
+                    <div class="video-wrapper">
+<iframe
+    id="about-video"
+    src="https://www.youtube.com/embed/3Y3_6t6Cgh4"
+    title="Giới Thiệu Thành Viên ChatGemini-Nhóm 4"
+    Alt="Video Giới Thiệu"
+    frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen>
+</iframe>
+
+
+                </div>
+
+                <h2 style="text-align: center; margin-bottom: 30px;">Thành viên nhóm (Nhấp vào để xem chi tiết)</h2>
+                
+                <div class="team-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 30px; text-align: center;">
+                    <a href="https://emtaihihius.github.io/GioiThieu/" target="_blank" class="member-card">
+                        <img src="tai.jpg">
+                        <div class="member-info"><div>Huỳnh Trịnh Chí Tài</div><small>Leader</small></div>
+                    </a>
+                    <a href="https://seneyuq.github.io/NeyuQ/" target="_blank" class="member-card">
+                        <img src="quyen.jpg">
+                        <div class="member-info"><div>Nguyễn Minh Quyến</div><small>Web Developer</small></div>
+                    </a>
+                    <a href="https://sites.google.com/view/ricon/th%C3%B4ng-tin-c%C3%A1-nh%C3%A2n" target="_blank" class="member-card">
+                        <img src="vietquan.jpg">
+                        <div class="member-info"><div>Nguyễn Việt Quân</div><small>Game Developer</small></div>
+                    </a>
+                    <a href="https://sites.google.com/view/nhat-ganarcho/d%E1%BB%B1-%C4%91%E1%BB%8Bnh" target="_blank" class="member-card">
+                        <img src="nhat.jpg">
+                        <div class="member-info"><div>Nguyễn Minh Nhật</div><small>Game Developer</small></div>
+                    </a>
+                    <a href="https://sites.google.com/view/trntnphc3010/trang-ch%E1%BB%A7" target="_blank" class="member-card">
+                        <img src="phuoc.jpg">
+                        <div class="member-info"><div>Trần Tấn Phước</div><small>Game Developer</small></div>
+                    </a>
+                    <a href="https://sites.google.com/view/quanlee-porfolio/home" target="_blank" class="member-card">
+                        <img src="lequan.jpg">
+                        <div class="member-info"><div>Lê Dương Hồng Quân</div><small>Game Developer</small></div>
+                    </a>
+                    <a href="https://sites.google.com/view/phat-efsrew-325ddtgt-5sf/trang-ch%E1%BB%A7" class="member-card">
+                        <img src="joe.jpg">
+                        <div class="member-info"><div>Nguyễn Tiến Phát</div><small>Game Developer</small></div>
+                    </a>
+                </div>
+            </section>
+
+
+            <section id="contact" class="page-section">
+            <div class="banner" style="height: 200px; background: linear-gradient(45deg, #000428, #004e92);">
+                <h1>Kết nối với chúng tôi</h1>
+            </div>
+            <div class="contact-container">
+                <div class="contact-box">
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 25px;">
+                        <div style="width: 50px; height: 50px; background: var(--highlight); border-radius: 12px; display: flex; justify-content: center; align-items: center;">
+                            <i class="fa-solid fa-headset" style="font-size: 24px; color: white;"></i>
+                        </div>
+                        <div>
+                            <h2 style="font-size: 20px;">Hỗ trợ kỹ thuật</h2>
+                            <p style="color: #666; font-size: 14px;">Phản hồi trong vòng 24h</p>
+                        </div>
+                    </div>
+                    <form onsubmit="event.preventDefault(); alert('Cảm ơn! Chúng tôi đã nhận được thông tin.');">
+                        <input type="text" placeholder="Họ và tên" class="form-group">
+                        <input type="email" placeholder="Email của bạn" class="form-group">
+                        <textarea rows="4" placeholder="Bạn cần hỗ trợ điều gì?" class="form-group"></textarea>
+                        <button class="btn-full btn-cart" style="border-radius: 10px;">Gửi yêu cầu ngay</button>
+                    </form>
+                </div>
+
+                <div class="contact-box" style="border-top: 4px solid var(--green);">
+                    <h2 style="margin-bottom: 20px;">Thông tin khác</h2>
+                    <p style="color: #aaa; line-height: 1.6;">Nếu bạn là nhà phát triển muốn đưa game lên nền tảng GameChemini, hãy gửi link demo cho chúng tôi.</p>
+                    
+                    <div class="contact-info-item">
+                        <i class="fa-solid fa-location-dot" style="color: var(--highlight);"></i>
+                        <span>Tòa nhà Innovation, Công viên phần mềm Quang Trung, TP.HCM</span>
+                    </div>
+                    <div class="contact-info-item">
+                        <i class="fa-solid fa-envelope" style="color: var(--highlight);"></i>
+                        <span>support@gamechemini.com</span>
+                    </div>
+                    
+                    <hr style="margin: 25px 0; border: 0; border-top: 1px solid #1f2937;">
+                    
+                    <h3 style="margin-bottom: 15px; font-size: 18px; color: var(--green);">Hợp tác phát hành</h3>
+                    <form onsubmit="event.preventDefault(); alert('Thông tin đã được gửi đến bộ phận kinh doanh!');">
+                        <input type="text" placeholder="Tên Studio / Nhà phát triển" class="form-group">
+                        <input type="text" placeholder="Link sản phẩm (Drive/Youtube)" class="form-group">
+                        <button class="btn-full" style="background: var(--green); color: white; border-radius: 10px;">Liên hệ hợp tác</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+        </div>
+
+
+        <footer>
+            <div class="footer-content">
+                <div class="footer-col">
+                    <h3>GameChemini</h3>
+                    <p style="color:#777; font-size:14px; line-height:1.6;">Nền tảng phân phối game indie hàng đầu.<br>Kết nối đam mê, kiến tạo thế giới ảo.</p>
+                </div>
+                <div class="footer-col">
+                    <h3>Liên kết nhanh</h3>
+                    <ul>
+                        <li><a href="#" onclick="showPage('home')">Trang chủ</a></li>
+                        <li><a href="#" onclick="showPage('plan')">Dự án</a></li>
+                        <li><a href="#" onclick="showPage('contact')">Hỗ trợ</a></li>
+                        <li><a href="#">Điều khoản sử dụng</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Theo dõi chúng tôi</h3>
+                    <div class="social-icons">
+                        <a href="https://www.facebook.com/nguyen.minh.quyen.797685" target="_blank"><i class="fa-brands fa-facebook"></i></a>
+                        <a href="https://discord.gg/DwfSBvyrhq" target="_blank"><i class="fa-brands fa-discord"></i></a>
+                        <a href="https://www.youtube.com/@ChiTaiHuynhTrinh" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+                        <a href="https://www.instagram.com/mihn.qwyns_/" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                &copy; 2025 GameChemini Group. All rights reserved.
+            </div>
+        </footer>
+
+
+        <button id="scroll-top" onclick="window.scrollTo(0,0)">
+            <i class="fa-solid fa-arrow-up"></i>
+        </button>
+
+
+    </div>
+    <div id="loginModal" class="login-modal">
+    <div class="login-box">
+        <h2 id="auth-title">Đăng nhập</h2>
+
+        <input id="auth-username" placeholder="Tên tài khoản">
+        <input id="auth-password" type="password" placeholder="Mật khẩu">
+
+        <input id="auth-repassword" type="password" placeholder="Xác nhận mật khẩu" style="display:none">
+        <input id="auth-email" type="email" placeholder="Email" style="display:none">
+        <input id="auth-phone" placeholder="Số điện thoại" style="display:none">
+
+        <input id="forgot-email" type="email" placeholder="Nhập email" style="display:none">
+
+        <button id="send-otp-btn" class="login-main"
+                style="display:none" onclick="sendOTP()">Gửi OTP</button>
+
+        <input id="forgot-otp" placeholder="Nhập mã OTP" style="display:none">
+        <input id="new-password" type="password" placeholder="Mật khẩu mới" style="display:none">
+
+        <button type="button" class="login-main" onclick="submitAuth()">Xác nhận</button>
+
+
+        <p style="margin-top:10px;font-size:14px">
+            <a href="javascript:void(0)" onclick="switchMode('login')">Đăng nhập</a> |
+            <a href="javascript:void(0)" onclick="switchMode('register')">Đăng ký</a> |
+            <a href="javascript:void(0)" onclick="switchMode('forgot')">Quên mật khẩu</a>
+        </p>
+
+        <button class="guest" onclick="closeLogin()">Đăng nhập sau</button>
+    </div>
+</div>
+
+    <script>
+    function toggleChat() {
+    const chat = document.getElementById('chat-window');
+    chat.style.display = chat.style.display === 'none' ? 'flex' : 'none';
+}
+
+function sendMessage() {
+    const input = document.getElementById('chat-input');
+    const content = document.getElementById('chat-content');
+    if (input.value.trim() === "") return;
+
+    // Tin nhắn của user
+    content.innerHTML += `<div style="background: var(--highlight); padding: 10px; border-radius: 8px; align-self: flex-end; max-width: 80%; color: white;">${input.value}</div>`;
+    
+    const userText = input.value.toLowerCase();
+    input.value = "";
+
+    // Phản hồi giả lập của bot
+    setTimeout(() => {
+        let botReply = "Xin lỗi, mình chưa hiểu ý bạn. Bạn có thể hỏi về 'giá game', 'nạp tiền' hoặc 'liên hệ' không?";
+        if(userText.includes("giá")) botReply = "Giá game tại GameChemini luôn ưu đãi nhất thị trường, bạn có thể xem ở từng thẻ game nhé!";
+        if(userText.includes("liên hệ")) botReply = "Bạn có thể nhắn tin qua mục Contact hoặc gọi hotline 1900-xxxx.";
+        
+        content.innerHTML += `<div style="background: #1e293b; padding: 10px; border-radius: 8px; align-self: flex-start; max-width: 80%;">${botReply}</div>`;
+        content.scrollTop = content.scrollHeight;
+    }, 1000);
+}
+    // --- DATA GAME ---
+const gamesData = [
+{
+    id: 'akizora',
+    type: 'new',
+    title: 'Akizora Memories: Horizon of Fate',
+    price: 0,
+    img: 'akizora memories horizon of fate.png',
+    video: 'Qd9QpF3G6nY',
+    genre: 'JRPG',
+    desc: 'Akizora Memories: Horizon of Fate là game JRPG mang phong cách anime với cốt truyện cảm xúc và thế giới giả tưởng rộng lớn.',
+    specs: { os: 'Win 10', cpu: 'i5', ram: '8GB', gpu: 'GTX 1050', storage: '15GB' },
+    reviews: [{ user: 'AnimeFan', rating: 5, comment: 'Cốt truyện tuyệt vời, đồ họa đẹp.' }]
+},
+{
+    id: 'monsterhunterwilds',
+    type: 'new',
+    title: 'Monster Hunter Wilds',
+    price: 0,
+    img: 'Monster Hunter Wilds.jpg',
+    video: 'pH0pQnYcYy8',
+    genre: 'Action RPG',
+    desc: 'Monster Hunter Wilds là phần mới nhất của dòng Monster Hunter, giới thiệu thế giới mở rộng lớn và hệ sinh thái sống động.',
+    specs: { os: 'Win 10', cpu: 'i7', ram: '16GB', gpu: 'RTX 2060', storage: '50GB' },
+    reviews: [{ user: 'MHFan', rating: 4.5, comment: 'Gameplay hấp dẫn, săn quái vật tuyệt vời.' }]
+},
+{
+    id: 'gtavi',
+    type: 'new',
+    title: 'Grand Theft Auto VI',
+    price: 0,
+    img: 'GTA VI.jpg',
+    video: 'QdBZY2fkU-0',
+    genre: 'Action',
+    desc: 'GTA VI đưa người chơi trở lại Vice City với thế giới mở hoành tráng và cốt truyện hiện đại.',
+    specs: { os: 'Win 10', cpu: 'i7', ram: '16GB', gpu: 'RTX 2070', storage: '80GB' },
+    reviews: [{ user: 'GTAGamer', rating: 5, comment: 'Đỉnh cao thế giới mở, cực kỳ chân thực.' }]
+},
+{
+    id: 'deathstranding2',
+    type: 'new',
+    title: 'Death Stranding 2: On the Beach',
+    price: 0,
+    img: 'Death Stranding 2.jpg',
+    video: 'wbLstJHlC4U',
+    genre: 'Action Adventure',
+    desc: 'Death Stranding 2 tiếp tục hành trình bí ẩn trong thế giới hậu tận thế đầy chiều sâu triết lý.',
+    specs: { os: 'Win 10', cpu: 'i5', ram: '16GB', gpu: 'GTX 1660', storage: '70GB' },
+    reviews: [{ user: 'StrandFan', rating: 4.5, comment: 'Gameplay độc đáo, trải nghiệm cuốn hút.' }]
+},
+{
+    id: 'metaphor',
+    type: 'new',
+    title: 'Metaphor: ReFantazio',
+    price: 0,
+    img: 'Metaphor ReFantazio.jpg',
+    video: 'Jz1kN1RZL1o',
+    genre: 'JRPG',
+    desc: 'Metaphor: ReFantazio là JRPG mới từ Atlus với phong cách fantasy độc đáo và cốt truyện chính trị sâu sắc.',
+    specs: { os: 'Win 10', cpu: 'i5', ram: '8GB', gpu: 'GTX 1050', storage: '20GB' },
+    reviews: [{ user: 'JRPGFan', rating: 4.5, comment: 'Cốt truyện xuất sắc, anime-style đẹp mắt.' }]
+},
+{
+    id: 'acshadows',
+    type: 'new',
+    title: "Assassin's Creed Shadows",
+    price: 0,
+    img: "Assassin's Creed Shadows.jpg",
+    video: 'k7Z5Qqg8z1A',
+    genre: 'Action RPG',
+    desc: 'Assassin’s Creed Shadows lấy bối cảnh Nhật Bản phong kiến với lối chơi hành động – ám sát đặc trưng.',
+    specs: { os: 'Win 10', cpu: 'i7', ram: '16GB', gpu: 'RTX 2060', storage: '60GB' },
+    reviews: [{ user: 'ACFan', rating: 5, comment: 'Chiến đấu mượt mà, bối cảnh tuyệt đẹp.' }]
+},
+{
+    id: 'blackmyth',
+    type: 'new',
+    title: 'Black Myth: Wukong',
+    price: 1490000,
+    img: 'Black Myth Wukong.jpg',
+    video: 'u83VdXAVq08',
+    genre: 'Action RPG',
+    desc: 'Black Myth: Wukong là game hành động nhập vai lấy cảm hứng từ Tây Du Ký với đồ họa Unreal Engine 5.',
+    specs: { os: 'Windows 10 64-bit', cpu: 'Intel Core i5-8400 / Ryzen 5 2600', ram: '16 GB', gpu: 'GTX 1060 6GB / RX 580', storage: '130 GB SSD' },
+    reviews: [{ user: 'IGN', rating: 8.5, comment: 'Một trong những game hành động được mong đợi nhất.' }]
+},
+{
+    id: 'ff7rebirth',
+    type: 'new',
+    title: 'Final Fantasy VII Rebirth',
+    price: 0,
+    img: 'Final Fantasy VII Rebirth.jpg',
+    video: 'HkD8BZ9T8s4',
+    genre: 'RPG',
+    desc: 'Final Fantasy VII Rebirth tiếp tục câu chuyện huyền thoại với thế giới mở rộng lớn và đồ họa đỉnh cao.',
+    specs: { os: 'Win 10', cpu: 'i5', ram: '16GB', gpu: 'GTX 1060', storage: '80GB' },
+    reviews: [{ user: 'FFFan', rating: 5, comment: 'Đồ họa và cốt truyện xuất sắc.' }]
+},
+{
+    id: 'fc25',
+    type: 'new',
+    title: 'EA Sports FC 25',
+    price: 0,
+    img: 'FC 25.jpg',
+    video: 'rW8R9zXcYpQ',
+    genre: 'Sports',
+    desc: 'EA Sports FC 25 mang đến trải nghiệm bóng đá chân thực với cải tiến gameplay và đồ họa.',
+    specs: { os: 'Win 10', cpu: 'i5', ram: '8GB', gpu: 'GTX 1050', storage: '20GB' },
+    reviews: [{ user: 'SoccerFan', rating: 4, comment: 'Gameplay chân thực và mượt mà.' }]
+},
+{
+    id: 'zelda_totk',
+    type: 'best',
+    title: 'Zelda: Tears of the Kingdom',
+    price: 0,
+    img: 'Zelda Tears of the Kingdom.jpg',
+    video: 'uHGShqcAHlQ',
+    genre: 'Action Adventure',
+    desc: 'Tears of the Kingdom mở rộng thế giới Hyrule với những cơ chế sáng tạo và tự do khám phá.',
+    specs: { os: 'Win 10', cpu: 'i5', ram: '8GB', gpu: 'GTX 1060', storage: '30GB' },
+    reviews: [{ user: 'ZeldaFan', rating: 5, comment: 'Gameplay sáng tạo, thế giới rộng lớn.' }]
+}
+,
+{
+    id: 'genshin',
+    type: 'trending',
+    title: 'Genshin Impact',
+    price: 0,
+    img: 'Genshin Impact.jpg',
+    video: 'HLUY1nICQRY',
+    genre: 'Action RPG',
+    desc: 'Genshin Impact là game nhập vai thế giới mở với phong cách anime và hệ thống nguyên tố độc đáo.',
+    specs: { os: 'Win 10', cpu: 'i5', ram: '8GB', gpu: 'GTX 1050 Ti', storage: '30GB' },
+    reviews: [{ user: 'Traveler', rating: 4.5, comment: 'Hệ thống nguyên tố sáng tạo, đồ họa đẹp.' }]
+},
+{
+    id: 'honkaistarrail',
+    type: 'trending',
+    title: 'Honkai: Star Rail',
+    price: 0,
+    img: 'Honkai Star Rail.jpg',
+    video: 'w8vPZrMFiZ4',
+    genre: 'JRPG',
+    desc: 'Honkai: Star Rail là JRPG theo lượt với cốt truyện khoa học viễn tưởng hấp dẫn.',
+    specs: { os: 'Win 10', cpu: 'i3', ram: '8GB', gpu: 'GTX 1050', storage: '20GB' },
+    reviews: [{ user: 'HonkaiFan', rating: 4, comment: 'Cốt truyện lôi cuốn, chiến đấu theo lượt thú vị.' }]
+},
+{
+    id: 'lol',
+    type: 'classic',
+    title: 'League of Legends',
+    price: 0,
+    img: 'League of Legends.jpg',
+    video: 'aR-KAldshAE',
+    genre: 'MOBA',
+    desc: 'League of Legends là MOBA hàng đầu thế giới với các cinematic trailer hoành tráng mỗi mùa.',
+    specs: { os: 'Win 7+', cpu: 'i3', ram: '4GB', gpu: 'Intel HD', storage: '10GB' },
+    reviews: [{ user: 'LoLFan', rating: 5, comment: 'MOBA kinh điển, luôn thú vị.' }]
+},
+{
+    id: 'deadlock',
+    type: 'trending',
+    title: 'Deadlock',
+    price: 0,
+    img: 'Deadlock.jpg',
+    video: 'KkVJ5m6aG2Y',
+    genre: 'Shooter',
+    desc: 'Deadlock là tựa game bắn súng góc nhìn thứ ba đang được Valve phát triển, kết hợp hành động nhanh và chiến thuật đồng đội.',
+    specs: { os: 'Win 10', cpu: 'i5', ram: '8GB', gpu: 'GTX 1060', storage: '25GB' },
+    reviews: [{ user: 'ShooterFan', rating: 4, comment: 'Hành động nhanh, chiến thuật thú vị.' }]
+},
+{
+    id: 'roblox',
+    type: 'trending',
+    title: 'Roblox',
+    price: 0,
+    img: 'Roblox.jpg',
+    video: 'eAvXhNlO-rA',
+    genre: 'Sandbox',
+    desc: 'Roblox là nền tảng sandbox cho phép người chơi sáng tạo và trải nghiệm hàng triệu game do cộng đồng tạo ra.',
+    specs: { os: 'Win 7+', cpu: 'i3', ram: '4GB', gpu: 'Intel HD', storage: '5GB' },
+    reviews: [{ user: 'Builder', rating: 4, comment: 'Sáng tạo không giới hạn, cộng đồng đông đảo.' }]
+},
+{
+    id: 'helldivers2',
+    type: 'trending',
+    title: 'Helldivers 2',
+    price: 0,
+    img: 'Helldivers 2.jpg',
+    video: 'oD3pxbG9YYI',
+    genre: 'Shooter',
+    desc: 'Helldivers 2 là game bắn súng co-op nhịp độ cao với các trận chiến quy mô lớn và yêu cầu phối hợp chặt chẽ.',
+    specs: { os: 'Win 10', cpu: 'i5', ram: '8GB', gpu: 'GTX 1050', storage: '30GB' },
+    reviews: [{ user: 'CoopFan', rating: 4.5, comment: 'Nhịp độ cao, chơi cùng bạn bè cực vui.' }]
+},
+{
+    id: 'mobilelegends',
+    type: 'trending',
+    title: 'Mobile Legends',
+    price: 0,
+    img: 'Mobile Legends.jpg',
+    video: 'pQ2h7zZP6x0',
+    genre: 'MOBA',
+    desc: 'Mobile Legends là game MOBA 5v5 nổi tiếng trên di động với nhịp độ nhanh và lối chơi dễ tiếp cận.',
+    specs: { os: 'Android/iOS', cpu: 'Octa-core', ram: '4GB', gpu: 'Adreno 618', storage: '2GB' },
+    reviews: [{ user: 'MLFan', rating: 4, comment: 'Nhanh, dễ chơi, hấp dẫn.' }]
+},
+{
+    id: 'cyberpunk',
+    type: 'best',
+    title: 'Cyberpunk 2077',
+    price: 0,
+    img: 'Cyberpunk 2077.jpg',
+    video: 'qIcTM8WXFjk',
+    genre: 'RPG',
+    desc: 'Cyberpunk 2077 là game RPG thế giới mở lấy bối cảnh tương lai tại Night City.',
+    specs: { os: 'Win 10', cpu: 'i7', ram: '16GB', gpu: 'RTX 2070', storage: '70GB' },
+    reviews: [{ user: 'NightCityFan', rating: 4.5, comment: 'Thế giới mở sống động, cốt truyện hấp dẫn.' }]
+},
+{
+    id: 'baldur3',
+    type: 'best',
+    title: "Baldur's Gate 3",
+    price: 0,
+    img: "Baldur's Gate 3.jpg",
+    video: '1T22wNvoNiU',
+    genre: 'RPG',
+    desc: 'Baldur’s Gate 3 là RPG chiến thuật dựa trên Dungeons & Dragons với cốt truyện phân nhánh sâu.',
+    specs: { os: 'Win 10', cpu: 'i5', ram: '16GB', gpu: 'GTX 1060', storage: '70GB' },
+    reviews: [{ user: 'DDFan', rating: 5, comment: 'Chiến thuật và cốt truyện xuất sắc.' }]
+},
+{
+    id: 'witcher3',
+    type: 'best',
+    title: 'The Witcher 3',
+    price: 0,
+    img: 'The Witcher 3.jpg',
+    video: 'XtqTU5cJHks',
+    genre: 'RPG',
+    desc: 'The Witcher 3 là game RPG hành động kinh điển với cốt truyện sâu sắc và thế giới rộng lớn.',
+    specs: { os: 'Win 10', cpu: 'i5', ram: '8GB', gpu: 'GTX 1060', storage: '50GB' },
+    reviews: [{ user: 'GeraltFan', rating: 5, comment: 'Cốt truyện sâu sắc, thế giới mở rộng lớn.' }]
+}
+,
+{
+    id: 'hogwarts',
+    type: 'best',
+    title: 'Hogwarts Legacy',
+    price: 0,
+    img: 'Hogwarts Legacy.jpg',
+    video: '1O6Qstncpnc',
+    genre: 'RPG',
+    desc: 'Hogwarts Legacy cho phép người chơi khám phá thế giới phù thủy trong vũ trụ Harry Potter.',
+    specs: { os: 'Win 10', cpu: 'i5', ram: '8GB', gpu: 'GTX 1070', storage: '85GB' },
+    reviews: [{ user: 'WizardFan', rating: 4.5, comment: 'Khám phá Hogwarts tuyệt vời, rất sống động.' }]
+},
+{
+    id: 'monsterhunterworld',
+    type: 'best',
+    title: 'Monster Hunter World',
+    price: 0,
+    img: 'Monster Hunter World.jpg',
+    video: 'OotQrKEqe94',
+    genre: 'Action RPG',
+    desc: 'Monster Hunter World tập trung vào săn quái vật khổng lồ trong môi trường rộng lớn.',
+    specs: { os: 'Win 10', cpu: 'i7', ram: '16GB', gpu: 'GTX 1070', storage: '60GB' },
+    reviews: [{ user: 'HunterFan', rating: 5, comment: 'Săn quái vật cực đã, môi trường sống động.' }]
+},
+{
+    id: 'sekiro',
+    type: 'best',
+    title: 'Sekiro: Shadows Die Twice',
+    price: 0,
+    img: 'Sekiro Shadows Die Twice.jpg',
+    video: 'rXMX4YJ7Lks',
+    genre: 'Action',
+    desc: 'Sekiro là game hành động độ khó cao lấy bối cảnh Nhật Bản thời phong kiến.',
+    specs: { os: 'Win 7+', cpu: 'i5', ram: '8GB', gpu: 'GTX 970', storage: '25GB' },
+    reviews: [{ user: 'SamuraiFan', rating: 5, comment: 'Độ khó cao, gameplay cực kỳ đã tay.' }]
+},
+{
+    id: 'battlecity',
+    type: 'classic',
+    title: 'Battle City',
+    price: 0,
+    img: 'Battle City.jpg',
+    video: '8b8qzq9k5hY',
+    genre: 'Arcade',
+    desc: 'Battle City là game arcade xe tăng kinh điển gắn liền với tuổi thơ nhiều thế hệ.',
+    specs: { os: 'Win 95+', cpu: 'Pentium', ram: '16MB', gpu: 'SVGA', storage: '2MB' },
+    reviews: [{ user: 'RetroFan', rating: 5, comment: 'Tuổi thơ của mình, vẫn vui.' }]
+},
+{
+    id: 'contra',
+    type: 'classic',
+    title: 'Contra',
+    price: 0,
+    img: 'Contra.jpg',
+    video: 'Zr4sYI5nGKs',
+    genre: 'Arcade',
+    desc: 'Contra là game bắn súng run-and-gun huyền thoại với độ khó cao.',
+    specs: { os: 'Win 95+', cpu: 'Pentium', ram: '16MB', gpu: 'SVGA', storage: '2MB' },
+    reviews: [{ user: 'RetroFan', rating: 5, comment: 'Độ khó kinh điển, bắn cực đã.' }]
+},
+{
+    id: 'mario',
+    type: 'classic',
+    title: 'Super Mario Bros',
+    price: 0,
+    img: 'Super Mario Bros.jpg',
+    video: 'ia8bhFoqkVE',
+    genre: 'Platform',
+    desc: 'Super Mario Bros là huyền thoại game platform gắn liền với tuổi thơ của nhiều thế hệ.',
+    specs: { os: 'NES Emulator', cpu: 'Any', ram: '2MB', gpu: 'Integrated', storage: '1MB' },
+    reviews: [{ user: 'MarioFan', rating: 5, comment: 'Huyền thoại, tuổi thơ trọn vẹn.' }]
+},
+{
+    id: 'pacman',
+    type: 'classic',
+    title: 'Pac-Man',
+    price: 0,
+    img: 'Pac-Man.jpg',
+    video: 'dScq4P5gn4A',
+    genre: 'Arcade',
+    desc: 'Pac-Man là biểu tượng của dòng game arcade cổ điển.',
+    specs: { os: 'Arcade', cpu: 'Any', ram: '2MB', gpu: 'Integrated', storage: '1MB' },
+    reviews: [{ user: 'RetroFan', rating: 5, comment: 'Cổ điển, vẫn gây nghiện.' }]
+},
+{
+    id: 'tetris',
+    type: 'classic',
+    title: 'Tetris',
+    price: 0,
+    img: 'Tetris.jpg',
+    video: 'NmCCQxVBfyM',
+    genre: 'Puzzle',
+    desc: 'Tetris là game xếp hình kinh điển với lối chơi đơn giản nhưng gây nghiện.',
+    specs: { os: 'Win 95+', cpu: 'Pentium', ram: '16MB', gpu: 'SVGA', storage: '2MB' },
+    reviews: [{ user: 'PuzzleFan', rating: 5, comment: 'Đơn giản nhưng cực kỳ gây nghiện.' }]
+},
+{
+    id: 'spaceinvaders',
+    type: 'classic',
+    title: 'Space Invaders',
+    price: 0,
+    img: 'Space Invaders.jpg',
+    video: 'MU4psw3ccUI',
+    genre: 'Arcade',
+    desc: 'Space Invaders là game bắn súng không gian cổ điển.',
+    specs: { os: 'Arcade', cpu: 'Any', ram: '2MB', gpu: 'Integrated', storage: '1MB' },
+    reviews: [{ user: 'RetroFan', rating: 5, comment: 'Cổ điển nhưng vẫn vui.' }]
+},
+{
+    id: 'pop',
+    type: 'classic',
+    title: 'Prince of Persia',
+    price: 0,
+    img: 'Prince of Persia.jpg',
+    video: '6Hc5mE6GxLk',
+    genre: 'Platform',
+    desc: 'Prince of Persia là dòng game platform – hành động nổi tiếng.',
+    specs: { os: 'Win 95+', cpu: 'Pentium', ram: '16MB', gpu: 'SVGA', storage: '2MB' },
+    reviews: [{ user: 'RetroFan', rating: 5, comment: 'Platform kinh điển, gameplay mượt.' }]
+},
+{
+    id: 'halflife2',
+    type: 'classic',
+    title: 'Half-Life 2',
+    price: 0,
+    img: 'Half-Life 2.jpg',
+    video: 'UKA7JkV51Jw',
+    genre: 'FPS',
+    desc: 'Half-Life 2 là tựa game FPS kinh điển của Valve với cốt truyện xuất sắc.',
+    specs: { os: 'Win 7+', cpu: 'i5', ram: '4GB', gpu: 'GTX 660', storage: '12GB' },
+    reviews: [{ user: 'HLFan', rating: 5, comment: 'FPS kinh điển, cốt truyện xuất sắc.' }]
+},
+{
+    id: 'diablo2',
+    type: 'classic',
+    title: 'Diablo II',
+    price: 0,
+    img: 'Diablo II.jpg',
+    video: 'R9uYpXxGkZc',
+    genre: 'RPG',
+    desc: 'Diablo II là game nhập vai hành động kinh điển với tông màu đen tối và cốt truyện về cuộc chiến với ác quỷ.',
+    specs: { os: 'Win 7+', cpu: 'Pentium 4', ram: '2GB', gpu: 'DirectX 9', storage: '2GB' },
+    reviews: [{ user: 'DiabloFan', rating: 5, comment: 'RPG kinh điển, tông màu đen tối ám ảnh.' }]
+},
+{
+    id: 'portal2',
+    type: 'classic',
+    title: 'Portal 2',
+    price: 0,
+    img: 'Portal 2.jpg',
+    video: 'tax4e4hBBZc',
+    genre: 'Puzzle',
+    desc: 'Portal 2 là game giải đố góc nhìn thứ nhất nổi tiếng với cơ chế cổng không gian sáng tạo.',
+    specs: { os: 'Win 7+', cpu: 'Dual Core', ram: '2GB', gpu: 'DirectX 9', storage: '8GB' },
+    reviews: [{ user: 'PuzzleFan', rating: 5, comment: 'Cổng không gian sáng tạo, giải đố thú vị.' }]
+},
+{
+    id: 'l4d2',
+    type: 'classic',
+    title: 'Left 4 Dead 2',
+    price: 0,
+    img: 'Left 4 Dead 2.jpg',
+    video: '9XIle_kLHKU',
+    genre: 'Zombie',
+    desc: 'Left 4 Dead 2 là game bắn súng co-op sinh tồn với bầy zombie đông đảo.',
+    specs: { os: 'Win 7+', cpu: 'Dual Core', ram: '2GB', gpu: 'DirectX 9', storage: '10GB' },
+    reviews: [{ user: 'L4DFan', rating: 5, comment: 'Co-op sinh tồn cực kì căng thẳng và vui.' }]
+}
+,
+{
+    id: 'monsterhunterwilds',
+    type: 'upcoming',
+    title: 'Monster Hunter Wilds',
+    price: 0,
+    img: 'Monster Hunter Wilds.jpg',
+    video: '6vJxYzK9yWc',
+    genre: 'Action RPG',
+    desc: 'Monster Hunter Wilds mở ra thế hệ săn quái vật mới với môi trường động và quy mô lớn.',
+    specs: { os: 'Win 10', cpu: 'i7', ram: '16GB', gpu: 'RTX 2060', storage: '80GB' },
+    reviews: [{ user: 'HunterFan', rating: 5, comment: 'Được mong đợi, săn quái vật cực đã.' }]
+},
+{
+    id: 'civ7',
+    type: 'upcoming',
+    title: 'Civilization VII',
+    price: 0,
+    img: 'Civilization VII.jpg',
+    video: 'pygcgE3a_uY',
+    genre: 'Strategy',
+    desc: 'Civilization VII tiếp tục dòng game chiến thuật xây dựng đế chế theo lượt huyền thoại.',
+    specs: { os: 'Win 10', cpu: 'i5', ram: '8GB', gpu: 'GTX 1060', storage: '20GB' },
+    reviews: [{ user: 'StrategyFan', rating: 4.5, comment: 'Rất đáng mong chờ cho fan game chiến thuật.' }]
+},
+{
+    id: 'deathstranding2',
+    type: 'upcoming',
+    title: 'Death Stranding 2',
+    price: 0,
+    img: 'Death Stranding 2.jpg',
+    video: 'wbLstJHlC4U',
+    genre: 'Adventure',
+    desc: 'Death Stranding 2 tiếp tục câu chuyện kết nối nhân loại trong thế giới hậu tận thế.',
+    specs: { os: 'Win 10', cpu: 'i7', ram: '16GB', gpu: 'GTX 1080', storage: '80GB' },
+    reviews: [{ user: 'AdventureFan', rating: 4.5, comment: 'Câu chuyện hấp dẫn, đồ họa tuyệt vời.' }]
+},
+{
+    id: 'ghostofyotei',
+    type: 'upcoming',
+    title: 'Ghost of Yotei',
+    price: 0,
+    img: 'Ghost of Yotei.jpg',
+    video: 'RkKz1XwY4nA',
+    genre: 'Action',
+    desc: 'Ghost of Yotei là tựa game hành động lấy cảm hứng samurai và thần thoại Nhật Bản.',
+    specs: { os: 'Win 10', cpu: 'i5', ram: '8GB', gpu: 'GTX 1060', storage: '30GB' },
+    reviews: [{ user: 'SamuraiFan', rating: 4.5, comment: 'Phong cách samurai rất đặc sắc, đáng mong đợi.' }]
+},
+{
+    id: 'doomdarkages',
+    type: 'upcoming',
+    title: 'Doom: The Dark Ages',
+    price: 0,
+    img: 'Doom The Dark Ages.jpg',
+    video: '4tk8lkmYGWQ',
+    genre: 'FPS',
+    desc: 'Doom: The Dark Ages đưa Doom Slayer trở về thời trung cổ đẫm máu.',
+    specs: { os: 'Win 10', cpu: 'i5', ram: '8GB', gpu: 'GTX 1060', storage: '40GB' },
+    reviews: [{ user: 'DoomFan', rating: 5, comment: 'FPS cổ điển nhưng bối cảnh mới cực đã.' }]
+},
+{
+    id: 'borderlands4',
+    type: 'upcoming',
+    title: 'Borderlands 4',
+    price: 0,
+    img: 'Borderlands 4.jpg',
+    video: 'mZJYk8C7F2A',
+    genre: 'FPS',
+    desc: 'Borderlands 4 tiếp tục phong cách bắn súng loot đồ hài hước đặc trưng.',
+    specs: { os: 'Win 10', cpu: 'i5', ram: '8GB', gpu: 'GTX 1070', storage: '50GB' },
+    reviews: [{ user: 'LootFan', rating: 4.5, comment: 'Vẫn vui nhộn và hấp dẫn với loot đồ.' }]
+},
+{
+    id: 'fable4',
+    type: 'upcoming',
+    title: 'Fable 4',
+    price: 0,
+    img: 'Fable 4.jpg',
+    video: 'x_03JQUc9Ao',
+    genre: 'RPG',
+    desc: 'Fable 4 mang thế giới cổ tích Albion trở lại với đồ họa hiện đại.',
+    specs: { os: 'Win 10', cpu: 'i5', ram: '8GB', gpu: 'GTX 1060', storage: '40GB' },
+    reviews: [{ user: 'RPGFan', rating: 4.5, comment: 'Rất đẹp, thế giới Albion sống động.' }]
+},
+{
+    id: 'mafiaoldcountry',
+    type: 'upcoming',
+    title: 'Mafia: The Old Country',
+    price: 0,
+    img: 'Mafia The Old Country.jpg',
+    video: 'N7bHn4h9P8c',
+    genre: 'Action',
+    desc: 'Mafia: The Old Country khai thác nguồn gốc của thế giới ngầm mafia.',
+    specs: { os: 'Win 10', cpu: 'i5', ram: '8GB', gpu: 'GTX 1060', storage: '35GB' },
+    reviews: [{ user: 'MafiaFan', rating: 4.5, comment: 'Cốt truyện mafia hấp dẫn, gameplay tốt.' }]
+},
+{
+    id: 'littlenightmares3',
+    type: 'upcoming',
+    title: 'Little Nightmares III',
+    price: 0,
+    img: 'Little Nightmares III.jpg',
+    video: 'V6o7FJHkJ9E',
+    genre: 'Horror',
+    desc: 'Little Nightmares III tiếp tục mang đến trải nghiệm kinh dị đầy ám ảnh.',
+    specs: { os: 'Win 10', cpu: 'i5', ram: '8GB', gpu: 'GTX 1060', storage: '25GB' },
+    reviews: [{ user: 'HorrorFan', rating: 5, comment: 'Rùng rợn và ám ảnh, tuyệt vời cho fan kinh dị.' }]
+},
+{
+    id: 'southofmidnight',
+    type: 'upcoming',
+    title: 'South of Midnight',
+    price: 0,
+    img: 'South of Midnight.jpg',
+    video: 'XK8z9Z9y0Yc',
+    genre: 'Adventure',
+    desc: 'South of Midnight là game phiêu lưu mang màu sắc huyền bí miền Nam nước Mỹ.',
+    specs: { os: 'Win 10', cpu: 'i5', ram: '8GB', gpu: 'GTX 1060', storage: '30GB' },
+    reviews: [{ user: 'AdventureFan', rating: 4.5, comment: 'Phiêu lưu bí ẩn, bối cảnh hấp dẫn.' }]
+},
+{
+    id: 'acshadows',
+    type: 'upcoming',
+    title: "Assassin's Creed Shadows",
+    price: 0,
+    img: "Assassin's Creed Shadows.jpg",
+    video: 'RjQn2J2GQhE',
+    genre: 'Action',
+    desc: 'Assassin’s Creed Shadows lấy bối cảnh Nhật Bản phong kiến với lối chơi sát thủ quen thuộc.',
+    specs: { os: 'Win 10', cpu: 'i5', ram: '8GB', gpu: 'GTX 1060', storage: '40GB' },
+    reviews: [{ user: 'ACFan', rating: 5, comment: 'Lối chơi ám sát đặc sắc, đồ họa đẹp.' }]
+}
+,
+{
+    id: 'aoe2',
+    type: 'classic',
+    title: 'Age of Empires II',
+    price: 0,
+    img: 'Age of Empires II.jpg',
+    video: '1cLhYz6zPpM',
+    genre: 'Strategy',
+    desc: 'Age of Empires II là game chiến thuật thời gian thực kinh điển.',
+    specs: { os: 'Win 7+', cpu: 'i3', ram: '4GB', gpu: 'Intel HD', storage: '2GB' },
+    reviews: [{ user: 'Historian', rating: 5, comment: 'Chiến thuật tuyệt vời, kinh điển mãi.' }]
+},
+{
+    id: 'bioshock',
+    type: 'best',
+    title: 'BioShock',
+    price: 0,
+    img: 'BioShock.jpg',
+    video: 'rrqfPG4ZcAA',
+    genre: 'FPS',
+    desc: 'BioShock là FPS kinh điển với cốt truyện triết lý và bối cảnh Rapture độc đáo.',
+    specs: { os: 'Win 7+', cpu: 'i5', ram: '4GB', gpu: 'GTX 560', storage: '10GB' },
+    reviews: [{ user: 'Philosopher', rating: 5, comment: 'Cốt truyện xuất sắc, bối cảnh Rapture quá ấn tượng.' }]
+},
+{
+    id: 'overwatch2',
+    type: 'trending',
+    title: 'Overwatch 2',
+    price: 0,
+    img: 'Overwatch 2.jpg',
+    video: 'GKXS_YA9s7E',
+    genre: 'FPS',
+    desc: 'Overwatch 2 là game hero shooter nhịp độ cao của Blizzard.',
+    specs: { os: 'Win 10', cpu: 'i5', ram: '8GB', gpu: 'GTX 660', storage: '30GB' },
+    reviews: [{ user: 'ShooterFan', rating: 4.5, comment: 'Hero shooter vui nhộn, đồ họa đẹp.' }]
+},
+{
+    id: 'gowragnarok',
+    type: 'new',
+    title: 'God of War Ragnarök',
+    price: 0,
+    img: 'God of War Ragnarok.jpg',
+    video: 'EE-4GvjKcfs',
+    genre: 'Action',
+    desc: 'God of War Ragnarök tiếp tục câu chuyện thần thoại Bắc Âu của Kratos.',
+    specs: { os: 'Win 10', cpu: 'i7', ram: '16GB', gpu: 'GTX 1070', storage: '50GB' },
+    reviews: [{ user: 'KratosFan', rating: 5, comment: 'Cốt truyện cực kì hấp dẫn, gameplay mượt mà.' }]
+},
+{
+    id: 'civ7',
+    type: 'new',
+    title: 'Civilization VII',
+    price: 0,
+    img: 'Civilization VII.jpg',
+    video: 'pygcgE3a_uY',
+    genre: 'Strategy',
+    desc: 'Civilization VII là phần mới của dòng game xây dựng đế chế huyền thoại.',
+    specs: { os: 'Win 10', cpu: 'i5', ram: '8GB', gpu: 'GTX 1060', storage: '20GB' },
+    reviews: [{ user: 'StrategyFan', rating: 4.5, comment: 'Rất đáng mong chờ cho fan chiến thuật.' }]
+},
+{
+    id: 'doomdarkages',
+    type: 'new',
+    title: 'Doom: The Dark Ages',
+    price: 0,
+    img: 'Doom The Dark Ages.jpg',
+    video: '4tk8lkmYGWQ',
+    genre: 'FPS',
+    desc: 'Doom: The Dark Ages đưa Doom Slayer về thời trung cổ tăm tối.',
+    specs: { os: 'Win 10', cpu: 'i5', ram: '8GB', gpu: 'GTX 1060', storage: '40GB' },
+    reviews: [{ user: 'DoomFan', rating: 5, comment: 'FPS cổ điển nhưng bối cảnh mới cực đã.' }]
+},
+{
+    id: 'fable4',
+    type: 'new',
+    title: 'Fable 4',
+    price: 0,
+    img: 'Fable 4.jpg',
+    video: 'x_03JQUc9Ao',
+    genre: 'RPG',
+    desc: 'Fable 4 mang thế giới Albion trở lại với phong cách hiện đại.',
+    specs: { os: 'Win 10', cpu: 'i5', ram: '8GB', gpu: 'GTX 1060', storage: '40GB' },
+    reviews: [{ user: 'RPGFan', rating: 4.5, comment: 'Thế giới Albion sống động, đáng mong chờ.' }]
+},
+{
+    id: 'southofmidnight',
+    type: 'new',
+    title: 'South of Midnight',
+    price: 0,
+    img: 'South of Midnight.jpg',
+    video: 'XK8z9Z9y0Yc',
+    genre: 'Adventure',
+    desc: 'South of Midnight là game phiêu lưu mang màu sắc huyền bí miền Nam nước Mỹ.',
+    specs: { os: 'Win 10', cpu: 'i5', ram: '8GB', gpu: 'GTX 1060', storage: '30GB' },
+    reviews: [{ user: 'AdventureFan', rating: 4.5, comment: 'Phiêu lưu bí ẩn, bối cảnh hấp dẫn.' }]
+},
+{
+    id: 'mafiaoldcountry',
+    type: 'new',
+    title: 'Mafia: The Old Country',
+    price: 0,
+    img: 'Mafia The Old Country.jpg',
+    video: 'N7bHn4h9P8c',
+    genre: 'Action',
+    desc: 'Mafia: The Old Country khai thác nguồn gốc của thế giới ngầm mafia.',
+    specs: { os: 'Win 10', cpu: 'i5', ram: '8GB', gpu: 'GTX 1060', storage: '35GB' },
+    reviews: [{ user: 'MafiaFan', rating: 4.5, comment: 'Cốt truyện mafia hấp dẫn, gameplay tốt.' }]
+},
+{
+    id: 'littlenightmares3',
+    type: 'new',
+    title: 'Little Nightmares III',
+    price: 0,
+    img: 'Little Nightmares III.jpg',
+    video: 'V6o7FJHkJ9E',
+    genre: 'Horror',
+    desc: 'Little Nightmares III tiếp tục mang đến trải nghiệm kinh dị ám ảnh.',
+    specs: { os: 'Win 10', cpu: 'i5', ram: '8GB', gpu: 'GTX 1060', storage: '25GB' },
+    reviews: [{ user: 'HorrorFan', rating: 5, comment: 'Rùng rợn và ám ảnh, tuyệt vời cho fan kinh dị.' }]
+},
+{
+    id: 'borderlands4',
+    type: 'new',
+    title: 'Borderlands 4',
+    price: 0,
+    img: 'Borderlands 4.jpg',
+    video: 'mZJYk8C7F2A',
+    genre: 'FPS',
+    desc: 'Borderlands 4 tiếp tục phong cách bắn súng loot đồ hài hước.',
+    specs: { os: 'Win 10', cpu: 'i5', ram: '8GB', gpu: 'GTX 1070', storage: '50GB' },
+    reviews: [{ user: 'LootFan', rating: 4.5, comment: 'Vẫn vui nhộn và hấp dẫn với loot đồ.' }]
+},
+{
+    id: 'ghostofyotei',
+    type: 'new',
+    title: 'Ghost of Yotei',
+    price: 0,
+    img: 'Ghost of Yotei.jpg',
+    video: 'RkKz1XwY4nA',
+    genre: 'Action',
+    desc: 'Ghost of Yotei là game hành động lấy cảm hứng từ samurai.',
+    specs: { os: 'Win 10', cpu: 'i5', ram: '8GB', gpu: 'GTX 1060', storage: '30GB' },
+    reviews: [{ user: 'SamuraiFan', rating: 4.5, comment: 'Phong cách samurai rất đặc sắc, đáng mong đợi.' }]
+},
+{
+    id: 'hades2',
+    type: 'new',
+    title: 'Hades II',
+    price: 0,
+    img: 'haddes2.jpg',
+    video: 'l-iHDj3EwdI',
+    genre: 'Rogue-like',
+    desc: 'Hades II tiếp tục phong cách hành động rogue-like thần tốc.',
+    specs: { os: 'Win 10', cpu: 'i5', ram: '8GB', gpu: 'GTX 1060', storage: '20GB' },
+    reviews: [{ user: 'RogueFan', rating: 4.5, comment: 'Gameplay cực kì đã, vẫn giữ phong cách rogue-like.' }]
+},
+{
+    id: 'morsels',
+    type: 'new',
+    title: 'Morsels',
+    price: 0,
+    img: 'morsels.jpg',
+    video: 'YJk9FvZp5JY',
+    genre: 'Indie',
+    desc: 'Morsels là game indie phiêu lưu với phong cách nghệ thuật độc đáo.',
+    specs: { os: 'Win 10', cpu: 'i3', ram: '4GB', gpu: 'Intel HD', storage: '2GB' },
+    reviews: [{ user: 'IndieFan', rating: 4, comment: 'Phong cách nghệ thuật rất riêng, đáng chơi.' }]
+},
+{
+    id: 'asibegan',
+    type: 'new',
+    title: 'AS I BEGAN DREAM',
+    price: 0,
+    img: 'AS I BEGAN DREAM.jpg',
+    video: 'Q2XnFZ8xkL0',
+    genre: 'Indie',
+    desc: 'AS I BEGAN DREAM là game indie mang màu sắc mộng mơ.',
+    specs: { os: 'Win 10', cpu: 'i3', ram: '4GB', gpu: 'Intel HD', storage: '2GB' },
+    reviews: [{ user: 'Dreamer', rating: 4, comment: 'Màu sắc mộng mơ, trải nghiệm thư giãn.' }]
+},
+{
+    id: 'retrace',
+    type: 'new',
+    title: 'RETRACE THE LIGHT',
+    price: 0,
+    img: 'RETRACE THE LIGHT.jpg',
+    video: '6Z4yFZ9v8vM',
+    genre: 'Adventure',
+    desc: 'RETRACE THE LIGHT là game phiêu lưu kể chuyện bằng hình ảnh.',
+    specs: { os: 'Win 10', cpu: 'i5', ram: '8GB', gpu: 'GTX 1060', storage: '25GB' },
+    reviews: [{ user: 'StoryLover', rating: 4.5, comment: 'Kể chuyện bằng hình ảnh rất ấn tượng.' }]
+},
+{
+    id: 'tormentor',
+    type: 'new',
+    title: 'TORMENTOR',
+    price: 0,
+    img: 'TORMENTOR.jpg',
+    video: 'G7Z1k9PpR8E',
+    genre: 'Horror',
+    desc: 'TORMENTOR là game kinh dị với bầu không khí căng thẳng.',
+    specs: { os: 'Win 10', cpu: 'i5', ram: '8GB', gpu: 'GTX 1060', storage: '25GB' },
+    reviews: [{ user: 'HorrorFan', rating: 5, comment: 'Kinh dị cực kì, bầu không khí căng thẳng.' }]
+},
+{
+    id: 'phoanhhai',
+    type: 'new',
+    title: 'Phở Anh Hai',
+    price: 0,
+    img: 'phoanhhai.jpg',
+    video: 'a9X6Zp3n0sQ',
+    genre: 'Indie Việt',
+    desc: 'Phở Anh Hai là game indie Việt mang màu sắc đời sống.',
+    specs: { os: 'Win 10', cpu: 'i3', ram: '4GB', gpu: 'Intel HD', storage: '2GB' },
+    reviews: [{ user: 'VNIndieFan', rating: 4.5, comment: 'Rất gần gũi với đời sống Việt, thú vị.' }]
+}
+,
+{
+    id: 'valorant',
+    type: 'trending',
+    title: 'Valorant',
+    price: 0,
+    img: 'valorant.jpg',
+    video: 'e_E9W2vsRbQ',
+    genre: 'FPS',
+    desc: 'Valorant là game bắn súng chiến thuật 5v5 của Riot Games.',
+    specs: { os: 'Win 10', cpu: 'i5', ram: '4GB', gpu: 'Intel HD', storage: '7GB' },
+    reviews: [{ user: 'AgentFan', rating: 4.5, comment: 'Chiến thuật 5v5 cực kỳ hấp dẫn.' }]
+},
+{
+    id: 'cs2',
+    type: 'trending',
+    title: 'CS2',
+    price: 0,
+    img: 'cs2.jpg',
+    video: 'ExZtISgOxEQ',
+    genre: 'FPS',
+    desc: 'Counter-Strike 2 là phiên bản nâng cấp của CS:GO.',
+    specs: { os: 'Win 10', cpu: 'i5', ram: '8GB', gpu: 'GTX 1050', storage: '15GB' },
+    reviews: [{ user: 'ShooterPro', rating: 5, comment: 'Nâng cấp đáng giá, gameplay mượt mà hơn.' }]
+},
+{
+    id: 'pubg',
+    type: 'trending',
+    title: 'PUBG',
+    price: 0,
+    img: 'pubg.jpg',
+    video: 'ODWCbu_cuqk',
+    genre: 'Battle Royale',
+    desc: 'PUBG là game battle royale đặt nền móng cho thể loại sinh tồn.',
+    specs: { os: 'Win 10', cpu: 'i5', ram: '8GB', gpu: 'GTX 1050', storage: '30GB' },
+    reviews: [{ user: 'Survivor', rating: 4.5, comment: 'Đặt nền tảng cho battle royale, rất cuốn.' }]
+},
+{
+    id: 'apex',
+    type: 'trending',
+    title: 'Apex Legends',
+    price: 0,
+    img: 'Apex Legends.jpg',
+    video: 'UMJb_mkqynU',
+    genre: 'Battle Royale',
+    desc: 'Apex Legends là game battle royale FPS tốc độ cao.',
+    specs: { os: 'Win 10', cpu: 'i5', ram: '8GB', gpu: 'GTX 1060', storage: '22GB' },
+    reviews: [{ user: 'LegendFan', rating: 4.5, comment: 'Battle royale tốc độ cao, cực kì vui nhộn.' }]
+},
+{
+    id: 'tft',
+    type: 'trending',
+    title: 'Teamfight Tactics',
+    price: 0,
+    img: 'TFT.jpg',
+    video: 'h4FGqymg4k4',
+    genre: 'Auto Chess',
+    desc: 'Chiến thuật.',
+    specs: { os: 'Win 10', cpu: 'i3', ram: '4GB', gpu: 'Intel HD', storage: '5GB' },
+    reviews: [{ user: 'Tactician', rating: 4, comment: 'Chiến thuật vui nhộn, dễ nghiện.' }]
+},
+{
+    id: 'dota2',
+    type: 'trending',
+    title: 'Dota 2',
+    price: 0,
+    img: 'dota2.jpg',
+    video: 'SmnqsdeHFT0',
+    genre: 'MOBA',
+    desc: '5v5.',
+    specs: { os: 'Win 7+', cpu: 'i3', ram: '4GB', gpu: 'Intel HD', storage: '15GB' },
+    reviews: [{ user: 'MOBAFan', rating: 5, comment: '5v5 chiến thuật tuyệt vời, đồ họa đẹp.' }]
+},
+{
+    id: 'fortnite',
+    type: 'trending',
+    title: 'Fortnite',
+    price: 0,
+    img: 'fornite.jpg',
+    video: '2gUtfBmw86Y',
+    genre: 'Battle Royale',
+    desc: 'Xây dựng.',
+    specs: { os: 'Win 10', cpu: 'i5', ram: '8GB', gpu: 'GTX 960', storage: '30GB' },
+    reviews: [{ user: 'Builder', rating: 4.5, comment: 'Xây dựng vui nhộn và sáng tạo.' }]
+},
+{
+    id: 'fallguys',
+    type: 'trending',
+    title: 'Fall Guys',
+    price: 0,
+    img: 'fallguys.jpg',
+    video: 'Wj3dUvGLjNQ',
+    genre: 'Party',
+    desc: 'Vui nhộn.',
+    specs: { os: 'Win 10', cpu: 'i3', ram: '4GB', gpu: 'Intel HD', storage: '5GB' },
+    reviews: [{ user: 'PartyFan', rating: 4, comment: 'Vui nhộn, dễ gây nghiện.' }]
+},
+{
+    id: 'minecraft',
+    type: 'trending',
+    title: 'Minecraft',
+    price: 750000,
+    img: 'mc.jpg',
+    video: 'MmB9b5njVbA',
+    genre: 'Sandbox',
+    desc: 'Xây dựng tự do.',
+    specs: { os:'Win 7+', cpu:'i3', ram:'4GB', vga:'Intel HD', storage:'2GB' },
+    reviews: [{ user: 'Steve', rating: 5, comment: 'Huyền thoại.' }] 
+},
+{
+    id: 'eldenring',
+    type: 'best',
+    title: 'Elden Ring',
+    price: 0,
+    img: 'elden.jpg',
+    video: 'E3Huy2cdih0',
+    genre: 'RPG',
+    desc: 'Thế giới mở.',
+    specs: { os: 'Win 10', cpu: 'i5', ram: '8GB', gpu: 'GTX 1070', storage: '50GB' },
+    reviews: [{ user: 'RPGMaster', rating: 5, comment: 'Thế giới mở rộng lớn, gameplay xuất sắc.' }]
+},
+{
+    id: 'gta',
+    type: 'best',
+    title: 'GTA',
+    price: 0,
+    img: 'GTA.jpg',
+    video: 'QkkoHAzjnUs',
+    genre: 'Open World',
+    desc: 'Tội phạm.',
+    specs: { os: 'Win 10', cpu: 'i5', ram: '8GB', gpu: 'GTX 960', storage: '45GB' },
+    reviews: [{ user: 'CriminalFan', rating: 5, comment: 'Open world tuyệt vời, nhiều hoạt động.' }]
+},
+{
+    id: 'rdr2',
+    type: 'best',
+    title: 'Red Dead Redemption 2',
+    price: 0,
+    img: 'reddead.jpg',
+    video: 'gmA6MrX81z4',
+    genre: 'Open World',
+    desc: 'Miền Tây.',
+    specs: { os: 'Win 10', cpu: 'i7', ram: '16GB', gpu: 'GTX 1070', storage: '80GB' },
+    reviews: [{ user: 'CowboyFan', rating: 5, comment: 'Miền Tây tuyệt đẹp, cốt truyện sâu sắc.' }]
+},
+{
+    id: 'revillage',
+    type: 'best',
+    title: 'Resident Evil Village',
+    price: 0,
+    img: 'resident evil.jpg',
+    video: 'tjfTxFzGh3Q',
+    genre: 'Horror',
+    desc: 'Kinh dị.',
+    specs: { os: 'Win 10', cpu: 'i5', ram: '8GB', gpu: 'GTX 1060', storage: '35GB' },
+    reviews: [{ user: 'HorrorFan', rating: 5, comment: 'Kinh dị cực đã, bối cảnh đẹp.' }]
+},
+{
+    id: 'dave',
+    type: 'best',
+    title: 'Dave The Diver',
+    price: 0,
+    img: 'dave.jpg',
+    video: 'Z5yXjZ3zZ4k',
+    genre: 'Indie',
+    desc: 'Lặn biển.',
+    specs: { os: 'Win 10', cpu: 'i3', ram: '4GB', gpu: 'Intel HD', storage: '5GB' },
+    reviews: [{ user: 'Diver', rating: 4, comment: 'Lặn biển thư giãn, rất vui.' }]
+},
+{
+    id: 'clairobscur',
+    type: 'upcoming',
+    title: 'Clair Obscur: Expedition 33',
+    price: 0,
+    img: 'clairobsur.jpg',
+    video: '4Jc0zQkzjL0',
+    genre: 'RPG',
+    desc: 'Coming soon.',
+    specs: { os: 'Win 10', cpu: 'i5', ram: '8GB', gpu: 'GTX 1060', storage: '30GB' },
+    reviews: []
+},
+{
+    id: 'stardew',
+    type: 'classic',
+    title: 'Stardew Valley',
+    price: 0,
+    img: 'stardew valley.webp',
+    video: 'ot7uXNQskhs',
+    genre: 'Farm',
+    desc: 'Nông trại.',
+    specs: { os: 'Win 7+', cpu: 'i3', ram: '4GB', gpu: 'Intel HD', storage: '2GB' },
+    reviews: [{ user: 'Farmer', rating: 5, comment: 'Nông trại thư giãn, dễ gây nghiện.' }]
+},
+{
+    id: 'hollow',
+    type: 'classic',
+    title: 'Hollow Knight',
+    price: 0,
+    img: 'Hollow knight.jpg',
+    video: 'UAO2urG23S4',
+    genre: 'Metroidvania',
+    desc: 'Indie.',
+    specs: { os: 'Win 7+', cpu: 'i3', ram: '4GB', gpu: 'Intel HD', storage: '2GB' },
+    reviews: [{ user: 'KnightFan', rating: 5, comment: 'Gameplay cực kì mượt và thử thách.' }]
+},
+{
+    id: 'ark',
+    type: 'classic',
+    title: 'ARK',
+    price: 0,
+    img: 'ARK.jpg',
+    video: 'FW9vsrPWujI',
+    genre: 'Survival',
+    desc: 'Khủng long.',
+    specs: { os: 'Win 10', cpu: 'i5', ram: '8GB', gpu: 'GTX 960', storage: '50GB' },
+    reviews: [{ user: 'DinoFan', rating: 4.5, comment: 'Sinh tồn cùng khủng long cực kì hấp dẫn.' }]
+},
+{
+    id: 'rimworld',
+    type: 'classic',
+    title: 'RimWorld',
+    price: 0,
+    img: 'rimwwold.jpg',
+    video: '3tDrxOASUog',
+    genre: 'Simulation',
+    desc: 'Sinh tồn.',
+    specs: { os: 'Win 7+', cpu: 'i3', ram: '4GB', gpu: 'Intel HD', storage: '2GB' },
+    reviews: [{ user: 'Simulator', rating: 4.5, comment: 'Simulation sinh tồn rất thú vị.' }]
+},
+{
+    id: 'flappy',
+    type: 'classic',
+    title: 'Flappy Bird',
+    price: 0,
+    img: 'flapy bird.png',
+    video: 'fQoJZuBwrkU',
+    genre: 'Arcade',
+    desc: 'Cổ điển.',
+    specs: { os: 'Win 7+', cpu: 'i3', ram: '2GB', gpu: 'Intel HD', storage: '100MB' },
+    reviews: [{ user: 'RetroFan', rating: 4, comment: 'Cổ điển và khó nhằn.' }]
+},
+{
+    id: 'forest',
+    type: 'classic',
+    title: 'The Forest',
+    price: 0,
+    img: 'The Forest.jpg',
+    video: '7mwn5U2PNvk',
+    genre: 'Survival Horror',
+    desc: 'Sinh tồn.',
+    specs: { os: 'Win 10', cpu: 'i5', ram: '8GB', gpu: 'GTX 960', storage: '20GB' },
+    reviews: [{ user: 'HorrorSurvivor', rating: 4.5, comment: 'Sinh tồn kinh dị, bầu không khí căng thẳng.' }]
+}
+,
+    // Game nhóm (Plan)
+    { id: 'snake', type: 'plan', title: 'Leaping Snake', price: 0,
+        img: 'pic1.PNG',
+        video: 'dQw4w9WgXcQ',
+        genre: 'Arcade',
+        desc: 'Rắn.',
+        specs: {os:'Win 7', cpu:'All', ram:'2GB', vga:'Onboard', storage:'100MB'},
+        reviews: []
+    },
+    { id: 'kiwi', type: 'plan', title: 'Kiwi Bird', price: 0,
+        img: 'kiwi4.png',
+        video: 'dQw4w9WgXcQ',
+        genre: 'Platformer',
+        desc: 'Chim Kiwi.',
+        specs: {os:'Win 7', cpu:'All', ram:'2GB', vga:'Onboard', storage:'150MB'},
+        reviews: []
+    },
+ {
+    id: 'valhelsing',
+    type: 'plan',
+    title: 'Valhelsing',
+    price: 0,
+    img: 'val1.PNG',
+    video: 'dQw4w9WgXcQ',
+    genre: 'Survival 2D',
+    desc: 'Valhelsing là game sinh tồn 2D với lối chơi nhặt đồ và chiến đấu với quái vật trong thế giới u ám.',
+    specs: {
+        os: 'Windows 7',
+        cpu: 'Intel Core i3',
+        ram: '4GB',
+        vga: 'Onboard',
+        storage: '500MB'
+    },
+    reviews: [
+        { user: 'Indie Dev', rating: 7.5, comment: 'Gameplay sinh tồn đơn giản nhưng gây nghiện.' }
+    ]
+},
+{
+    id: 'pointerdash',
+    type: 'plan',
+    title: 'Pointer Dash',
+    price: 0,
+    img: 'pointer dash.jpg',
+    video: 'dQw4w9WgXcQ',
+    genre: 'Arcade / Reflex',
+    desc: 'Pointer Dash là game arcade 2D gây ức chế, yêu cầu phản xạ nhanh và độ chính xác cao. Người chơi điều khiển con trỏ vượt qua chướng ngại vật với nhịp độ nhanh, chỉ một sai lầm nhỏ cũng phải chơi lại từ đầu.',
+    specs: {
+        os: 'Windows 7',
+        cpu: 'All',
+        ram: '2GB',
+        vga: 'Onboard',
+        storage: '100MB'
+    },
+    reviews: [
+        { user: 'Player', rating: 7.8, comment: 'Rất khó nhưng chơi rất cuốn, càng thua càng muốn chơi lại.' }
+    ]
+},
+
+{
+    id: 'racingboy',
+    type: 'plan',
+    title: 'Racing Boy',
+    price: 0,
+    img: 'racing3.jpg',
+    video: 'dQw4w9WgXcQ',
+    genre: 'Racing',
+    desc: 'Racing Boy là game đua xe phong cách arcade với lối chơi đơn giản, tốc độ cao và dễ tiếp cận. Người chơi điều khiển xe vượt qua các chặng đua, né chướng ngại vật và cạnh tranh thời gian để về đích nhanh nhất.',
+    specs: {
+        os: 'Windows 7',
+        cpu: 'All',
+        ram: '2GB',
+        vga: 'Onboard',
+        storage: '200MB'
+    },
+    reviews: [
+        { user: 'Casual Player', rating: 7.6, comment: 'Đua xe nhẹ nhàng, dễ chơi và giải trí tốt.' }
+    ]
+},
+
+{
+    id: 'xastressricon',
+    type: 'plan',
+    title: 'Xả Stress Cùng Ricon',
+    price: 0,
+    img: 'ricon2.PNG',
+    video: 'dQw4w9WgXcQ',
+    genre: 'Casual / Arcade',
+    desc: 'Xả Stress Cùng Ricon là game đập chuột giải trí, nơi người chơi phải phản xạ thật nhanh để đập trúng các mục tiêu xuất hiện liên tục. Lối chơi đơn giản, vui nhộn, phù hợp để giải tỏa căng thẳng sau giờ học và làm việc.',
+    specs: {
+        os: 'Windows 7',
+        cpu: 'All',
+        ram: '2GB',
+        vga: 'Onboard',
+        storage: '100MB'
+    },
+    reviews: [
+        { user: 'Casual Gamer', rating: 7.8, comment: 'Gameplay đơn giản, vui và đúng chất xả stress.' }
+    ]
+},
+{
+    id: 'xogame',
+    type: 'plan',
+    title: 'XO 3x3',
+    price: 0,
+    img: 'XO.PNG',
+    video: 'dQw4w9WgXcQ',
+    genre: 'Puzzle / Board Game',
+    desc: 'XO 3x3 là game cờ caro kinh điển, nơi hai người chơi lần lượt đánh X và O trên bàn cờ 3x3. Mục tiêu là tạo thành một hàng ngang, dọc hoặc chéo trước đối thủ.',
+    specs: {
+        os: 'Windows 7',
+        cpu: 'All',
+        ram: '2GB',
+        vga: 'Onboard',
+        storage: '50MB'
+    },
+    reviews: [
+        { user: 'Classic Gamer', rating: 7.5, comment: 'Luật chơi đơn giản, phù hợp giải trí nhanh.' }
+    ]
+},
+
+{
+    id: 'warriorsbattle',
+    type: 'plan',
+    title: 'Warriors Battle',
+    price: 0,
+    img: 'wr.PNG',
+    video: 'videogame (1).mp4',
+    genre: "Beat 'em up / Action 2D",
+    desc: 'Warriors Battle là game hành động đánh nhau 2D phong cách bóng đá . Người chơi điều khiển chiến binh chiến đấu với kẻ địch, lụm đồ và vũ khí rơi ra để tăng sức mạnh và chiến thắng đối phương .',
+    specs: {
+        os: 'Windows 7',
+        cpu: 'All',
+        ram: '4GB',
+        vga: 'Onboard',
+        storage: '300MB'
+    },
+    reviews: [
+        { user: 'Action Fan', rating: 8.0, comment: 'Lối chơi cổ điển, đánh đã tay và rất cuốn.' }
+    ]
+},
+
+
+
+
+];
+
+
+const priceMap = {
+    /* ===== MỚI PHÁT HÀNH ===== */
+    'blackmyth': 1288652,
+    'ff7rebirth': 1550000,
+    'fc25': 990000,
+    'metaphor': 1264000,
+    'gowragnarok': 1400000,
+    'zeldatok': 1300000,
+    /* ===== THIẾU – BỔ SUNG ===== */
+'hollow': 165000,            // Hollow Knight
+'rimworld': 590000,
+'forest': 188000,
+'ark': 460000,
+'stardew': 165000,
+'flappy': 0,
+
+'dave': 240000,
+'revillage': 990000,
+'clairobscur': 1200000,
+
+'littlenightmares3': 1200000,
+'fable4': 1400000,
+'borderlands4': 1400000,
+'mafiaoldcountry': 1300000,
+'southofmidnight': 1300000,
+
+'hades2': 550000,
+'morsels': 220000,
+'asibegan': 0,
+'retrace': 0,
+'tormentor': 180000,
+'phoanhhai': 0,
+
+    /* ===== XU HƯỚNG ===== (miễn phí) */
+    'lol': 0,
+    'valorant': 0,
+    'dota2': 0,
+    'deadlock': 0,
+    'roblox': 0,
+    'tft': 0,
+    'genshin': 0,
+    'honkai': 0,
+    'mobilelegends': 0,
+    'overwatch2': 0,
+    'apex': 0,
+    'pubg': 0,
+    'cs2': 0,
+    'fortnite': 0,
+    'fallguys': 0,
+    'minecraft2': 650000,
+'minecraft3': 650000,
+
+    /* ===== BÁN CHẠY ===== */
+    'cyberpunk': 990000,
+    'eldenring': 990000,
+    'baldur3': 595000,
+    'witcher3': 390000,
+    'rdr2': 1000000,
+    'gta': 450000,
+    'hogwarts': 990000,
+    'minecraft': 650000,
+    'terraria': 120000,
+    'stardew': 165000,
+    'monsterhunterworld': 165286,
+    'sekiro': 1300000,
+
+    /* ===== SẮP RA MẮT ===== */
+    'monsterhunterwilds': 1390000,
+    'civ7': 1400000,
+    'gtavi': 1700000,
+    'deathstranding2': 1500000,
+    'ghostofyotei': 1500000,
+    'doomdarkages': 1500000,
+
+    /* ===== CỔ ĐIỂN ===== */
+    'diablo2': 889900,
+    'aoe2': 300000,
+    'l4d2': 120000,
+    'portal2': 120000,
+    'halflife2': 120000,
+    'bioshock': 250000,
+    'contra': 0,       // thường miễn phí chơi web/giả lập
+    'tetris': 0,
+    'pacman': 0
+};
+
+gamesData.forEach(game => {
+    game.price = priceMap[game.id] ?? 0;
+});
+
+
+let currentGameId = null;
+
+
+
+        // --- RENDER HOME ---
+        function initHome() {
+            const containers = {
+                'new': document.getElementById('new-list'),
+                'trending': document.getElementById('trending-list'),
+                'best': document.getElementById('best-list'),
+                'upcoming': document.getElementById('upcoming-list'),
+                'classic': document.getElementById('classic-list'),
+                'plan': document.getElementById('plan-list')
+            };
+
+
+            gamesData.forEach(game => {
+                const container = containers[game.type];
+                if (container) {
+                    container.innerHTML += `
+                        <div class="game-card" onclick="openGameDetail('${game.id}')">
+                            ${game.type === 'new' ? '<div class="tag-overlay">New</div>' : ''}
+                            ${game.type === 'upcoming' ? '<div class="tag-overlay" style="background:blue">Soon</div>' : ''}
+                            <img src="${game.img}" class="game-img">
+                            <div class="game-info">
+                                <div class="game-title">${game.title}</div>
+                                <div class="game-footer">
+                                    <span class="price">
+    ${game.price === 0 
+        ? '<span style="color:#4caf50;">Miễn phí</span>' 
+        : game.price.toLocaleString('vi-VN') + ' đ'}
+</span>
+
+
+
+                                    <button class="btn-card-add" onclick="event.stopPropagation(); addToCart('${game.title}', ${game.price})">
+                                        <i class="fa-solid fa-cart-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>`;
+                }
+            });
+        }
+        initHome();
+
+        function formatPrice(price) {
+    if (price === 0) return '<span style="color:#2ecc71">FREE</span>';
+    if (price === -1) return '<span style="color:#f1c40f">TBA</span>';
+    return price.toLocaleString('vi-VN') + ' ₫';
+}
+
+
+        // --- NAVIGATION ---
+        function showPage(pageId) {
+            document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            if(pageId !== 'game-detail') {
+                const nav = document.getElementById('nav-' + (pageId === 'home' ? 'home' : pageId));
+                if(nav) nav.classList.add('active');
+            }
+            if (pageId === 'about') {
+    setTimeout(reloadAboutVideo, 100);
+}
+
+            window.scrollTo(0,0);
+        }
+
+
+       function openGameDetail(gameId) {
+    const game = gamesData.find(g => g.id === gameId);
+    if (!game) return;
+
+    currentGame = game; // ✅ DÒNG QUAN TRỌNG NHẤT
+
+    document.getElementById('d-title').innerText = game.title;
+    document.getElementById('d-genre').innerText = 'Thể loại: ' + game.genre;
+    document.getElementById('d-desc').innerText = game.desc;
+    document.getElementById('d-img-thumb').src = game.img;
+    document.getElementById('d-video').src = 'https://www.youtube.com/embed/' + game.video;
+    document.getElementById('d-price').innerText =
+        game.price === 0 ? 'Miễn phí' : game.price.toLocaleString() + ' đ';
+
+    document.getElementById('s-os').innerText = game.specs.os;
+    document.getElementById('s-cpu').innerText = game.specs.cpu;
+    document.getElementById('s-ram').innerText = game.specs.ram;
+    document.getElementById('s-storage').innerText = game.specs.storage;
+
+    renderReviews(game.reviews);
+    currentRating = 0;
+    updateStarUI(0);
+    document.getElementById('review-text').value = '';
+
+    document.getElementById('btn-add-detail').onclick = function () {
+        addToCart(game.title, game.price);
+    };
+
+    showPage('game-detail');
+}
+
+const slides = document.querySelectorAll('.banner-slider .slides img');
+let currentIndex = 0;
+
+// Hàm chuyển slide
+function showNextSlide() {
+    slides[currentIndex].classList.remove('active');
+    currentIndex = (currentIndex + 1) % slides.length;
+    slides[currentIndex].classList.add('active');
+}
+
+// Tự chạy mỗi 5s
+let interval = setInterval(showNextSlide, 5000);
+
+// Click vào ảnh mở tab game
+slides.forEach(img => {
+    img.addEventListener('click', () => {
+        const gameId = img.getAttribute('data-id');
+        openGameDetail(gameId);
+    });
+
+    // Hover tạm dừng tự chạy
+    img.addEventListener('mouseenter', () => clearInterval(interval));
+    img.addEventListener('mouseleave', () => interval = setInterval(showNextSlide, 5000));
+});
+
+
+
+
+        // --- REVIEWS ---
+        let currentRating = 0;
+        function selectStar(n) { currentRating = n; updateStarUI(n); }
+        function updateStarUI(n) {
+            document.querySelectorAll('#star-input i').forEach((star, idx) => {
+                if(idx < n) star.classList.add('active'); else star.classList.remove('active');
+            });
+        }
+        function renderReviews(reviews) {
+            const container = document.getElementById('review-container');
+            container.innerHTML = '';
+            if(reviews.length === 0) { container.innerHTML = '<p style="color:#777; font-style:italic;">Chưa có đánh giá nào.</p>'; return; }
+            reviews.forEach(r => {
+                let starHTML = '';
+                for(let i=0; i<5; i++) starHTML += `<i class="fa-solid fa-star" style="color: ${i < r.rating ? '#f1c40f' : '#555'}"></i>`;
+                container.innerHTML += `
+                    <div class="review-item">
+                        <div class="user-name">${r.user} <span>${starHTML}</span></div>
+                        <div class="user-comment">${r.comment}</div>
+                    </div>`;
+            });
+        }
+        function submitReview() {
+            const text = document.getElementById('review-text').value;
+            if(currentRating === 0) return alert("Vui lòng chọn số sao!");
+            const game = gamesData.find(g => g.id === currentGameId);
+            if(game) {
+                game.reviews.unshift({ user: 'Bạn', rating: currentRating, comment: text });
+                renderReviews(game.reviews);
+                document.getElementById('review-text').value = '';
+                alert("Đã gửi đánh giá!");
+            }
+        }
+
+
+        // --- CART & PAYMENT ---
+        let cart = [];
+        let total = 0;
+        function addToCart(title, price) {
+    // kiểm tra trùng
+    if (!localStorage.getItem('loggedInUser')) {
+        openLogin();
+        alert('Vui lòng đăng nhập để mua game');
+        return;
+    }
+    const exists = cart.some(item => item.title === title);
+        
+    if (exists) {
+        showToast(`⚠️ "${title}" đã có trong giỏ hàng`);
+        return;
+    }
+
+    cart.push({
+        title: title,
+        price: price
+    });
+
+    updateCart();
+
+    if (price === 0) {
+        showToast(`✅ Đã thêm "${title}" (Miễn phí)`);
+    } else {
+        showToast(`🛒 Đã thêm "${title}" – ${price.toLocaleString('vi-VN')} đ`);
+    }
+}
+
+
+
+
+
+        function updateCart() {
+    const cartItems = document.getElementById('cart-items');
+    const cartTotal = document.getElementById('cart-total');
+    const cartCount = document.getElementById('cartCount');
+
+    cartItems.innerHTML = '';
+    let total = 0;
+    let hasPaidGame = false;
+
+    if (cart.length === 0) {
+        cartItems.innerHTML = '<li>Giỏ hàng trống</li>';
+    }
+
+    cart.forEach(item => {
+        const li = document.createElement('li');
+
+        if (item.price > 0) {
+            li.innerHTML = `
+                <span>${item.title}</span>
+                <span>${item.price.toLocaleString('vi-VN')} đ</span>
+            `;
+            total += item.price;
+            hasPaidGame = true;
+        } else {
+            li.innerHTML = `
+                <span>${item.title}</span>
+                <span style="color:#aaa;">Miễn phí</span>
+            `;
+        }
+
+        cartItems.appendChild(li);
+    });
+
+    cartTotal.innerText = total.toLocaleString('vi-VN') + ' đ';
+    cartCount.innerText = cart.length;
+
+    // GẮN CỜ ĐỂ CHECK KHI THANH TOÁN
+    cartTotal.dataset.canPay = hasPaidGame ? '1' : '0';
+}
+    function openLogin() {
+    document.getElementById('loginModal').style.display = 'flex';
+    switchMode('login'); // 👈 BẮT BUỘC
+}
+
+
+function closeLogin() {
+    document.getElementById('loginModal').style.display = 'none';
+}
+
+window.onload = () => {
+    const user = localStorage.getItem('loggedInUser');
+    const btn = document.getElementById('loginBtn');
+
+    if (!user) {
+        btn.innerHTML = 'Đăng nhập';
+        openLogin(); // bật modal
+    } else {
+        btn.innerHTML = `<i class="fa-solid fa-user"></i> ${user}`;
+    }
+};
+
+
+        function openPayment() {
+    // 1. Kiểm tra giỏ hàng có trống không
+    if (cart.length === 0) {
+        alert("Giỏ hàng của bạn đang trống!");
+        return;
+    }
+
+    // 2. Tính tổng tiền hiện tại
+    const total = cart.reduce((sum, item) => sum + item.price, 0);
+
+    // 3. Xử lý logic theo giá tiền
+    if (total === 0) {
+        // Nếu miễn phí (0đ)
+        alert("Sản phẩm miễn phí! Thanh toán thành công. Hệ thống sẽ bắt đầu tải game.");
+        showSuccessModal(); // Gọi hàm hiện thông báo thành công hoặc xử lý tải game
+        toggleCart();       // Đóng giỏ hàng
+    } else {
+        // Nếu có tiền (> 0đ) -> Hiện modal quét mã QR
+        document.getElementById('pay-amount').innerText = total.toLocaleString() + " đ";
+        
+        // Tạo link QR (Ví dụ sử dụng VietQR hoặc ảnh tĩnh)
+        // Bạn có thể thay link dưới bằng link API QR ngân hàng của bạn
+        document.getElementById('qr-code-img').src = `https://img.vietqr.io/image/970422-123456789-compact.jpg?amount=${total}&addInfo=ThanhToanGame`;
+        
+        document.getElementById('payment-modal').style.display = 'flex';
+    }
+}
+        function closePayment() { document.getElementById('payment-modal').style.display = 'none'; }
+
+
+        // --- SEARCH ---
+        function searchGame() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            document.querySelectorAll('.game-card').forEach(card => {
+                const title = card.querySelector('.game-title').innerText.toLowerCase();
+                card.style.display = title.includes(input) ? "block" : "none";
+                saveSearchHistory(document.getElementById('searchInput').value);
+
+            });
+        }
+       function showSuccessModal() {
+    document.getElementById('success-modal').style.display = 'flex';
+}
+
+function closeSuccessModal() {
+    document.getElementById('success-modal').style.display = 'none';
+
+    // reset giỏ hàng sau khi thanh toán
+    cart = [];
+    updateCart();
+}
+let toastTimeout;
+
+function showToast(message) {
+    const toast = document.getElementById('toast');
+
+    toast.innerText = message;
+    toast.style.display = 'block';
+
+    // clear timeout cũ nếu bấm liên tục
+    if (toastTimeout) clearTimeout(toastTimeout);
+
+    toastTimeout = setTimeout(() => {
+        toast.style.display = 'none';
+    }, 2000);
+}
+
+
+        // --- SCROLL BUTTON ---
+        window.onscroll = function() {
+            const btn = document.getElementById('scroll-top');
+            if(document.documentElement.scrollTop > 300) btn.style.display = "flex"; else btn.style.display = "none";
+        };
+
+
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('payment-modal')) closePayment();
+            if (event.target == document.getElementById('cart-modal-container')) toggleCart();
+        }
+        function renderGames(type, containerId) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
+
+    gamesData
+        .filter(game => game.type === type)
+        .forEach(game => {
+            container.innerHTML += `
+                <div class="game-card" onclick="openDetail('${game.id}')">
+                    <img src="images/${game.img}" class="game-img">
+                    <div class="game-info">
+                        <div class="game-title">${game.title}</div>
+                        <div class="game-footer">
+                            <span class="price">${formatPrice(game.price)}</span>
+                            <button class="btn-card-add"
+        onclick="addToCart('${game.title}', ${game.price})">
+    <i class="fa-solid fa-plus"></i>
+</button>
+
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+}
+    function formatPrice(price) {
+    if (price === 0) return 'FREE';
+    if (price === -1) return 'TBA';
+    return price.toLocaleString('vi-VN') + ' ₫';
+}
+function getDisplayPrice(game) {
+    if (game.price > 0) return game.price;
+
+    // Giá thị trường giả
+    const min = 300000;
+    const max = 1200000;
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+
+function renderGames(type, containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    container.innerHTML = '';
+
+    gamesData
+        .filter(game => game.type === type)
+        .forEach(game => {
+            container.innerHTML += `
+                <div class="game-card">
+                    <img src="${game.img}" class="game-img" alt="${game.title}">
+                    <div class="game-info">
+                        <div class="game-title">${game.title}</div>
+                        <div class="game-price">${formatPrice(game.price)}</div>
+                    </div>
+                </div>
+            `;
+        });
+}
+
+function handleSearchInput() {
+    const input = document.getElementById('searchInput');
+    const suggestBox = document.getElementById('search-suggest');
+    const keyword = input.value.toLowerCase().trim();
+
+    suggestBox.innerHTML = '';
+
+    let history = JSON.parse(localStorage.getItem('searchHistory')) || [];
+
+    let suggestions = [];
+
+    if (keyword !== '') {
+        suggestions = gamesData
+    .filter(g => g.title.toLowerCase().startsWith(keyword))
+    .map(g => g.title);
+
+    } else {
+        suggestions = history;
+    }
+
+    suggestions = [...new Set(suggestions)].slice(0, 6);
+
+    if (suggestions.length === 0) {
+        suggestBox.style.display = 'none';
+        return;
+    }
+
+    suggestions.forEach(text => {
+        const div = document.createElement('div');
+        div.textContent = text;
+        div.onclick = () => {
+            input.value = text;
+            suggestBox.style.display = 'none';
+            saveSearchHistory(text);
+            searchGame();
+        };
+        suggestBox.appendChild(div);
+    });
+
+    suggestBox.style.display = 'block';
+}
+
+function saveSearchHistory(keyword) {
+    let history = JSON.parse(localStorage.getItem('searchHistory')) || [];
+    history.unshift(keyword);
+    history = [...new Set(history)].slice(0, 8);
+    localStorage.setItem('searchHistory', JSON.stringify(history));
+}
+/* ===== BIẾN ===== */
+let authMode = 'login';
+let otpCode = null;
+let otpUsername = null;
+
+/* ===== DOM (SAU KHI HTML TỒN TẠI) ===== */
+const authUsername = document.getElementById('auth-username');
+const authPassword = document.getElementById('auth-password');
+const authRepassword = document.getElementById('auth-repassword');
+const authEmail = document.getElementById('auth-email');
+const authPhone = document.getElementById('auth-phone');
+const forgotEmail = document.getElementById('forgot-email');
+const forgotOtp = document.getElementById('forgot-otp');
+const newPassword = document.getElementById('new-password');
+
+/* ===== MODAL ===== */
+function openLogin() {
+    document.getElementById('loginModal').style.display = 'flex';
+    switchMode('login');
+}
+function closeLogin() {
+    document.getElementById('loginModal').style.display = 'none';
+}
+
+/* ===== MODE ===== */
+function switchMode(mode) {
+    authMode = mode;
+    document.getElementById('auth-title').innerText =
+        mode === 'login' ? 'Đăng nhập' :
+        mode === 'register' ? 'Đăng ký' : 'Quên mật khẩu';
+
+    const show = (id, ok) =>
+        document.getElementById(id).style.display = ok ? 'block' : 'none';
+
+    show('auth-username', mode !== 'forgot');
+    show('auth-password', mode !== 'forgot');
+    show('auth-repassword', mode === 'register');
+    show('auth-email', mode === 'register');
+    show('auth-phone', mode === 'register');
+    show('forgot-email', mode === 'forgot');
+    show('send-otp-btn', mode === 'forgot');
+    show('forgot-otp', false);
+    show('new-password', false);
+}
+
+/* ===== OTP ===== */
+function sendOTP() {
+    let users = JSON.parse(localStorage.getItem('users')) || {};
+    const email = forgotEmail.value.trim();
+    const user = Object.keys(users).find(u => users[u].email === email);
+    if (!user) return alert('Email không tồn tại');
+
+    otpCode = Math.floor(100000 + Math.random() * 900000) + '';
+    otpUsername = user;
+    alert('OTP: ' + otpCode);
+
+    forgotOtp.style.display = 'block';
+    newPassword.style.display = 'block';
+}
+
+/* ===== SUBMIT ===== */
+function submitAuth() {
+    let users = JSON.parse(localStorage.getItem('users')) || {};
+
+    if (authMode === 'register') {
+        const u = authUsername.value.trim();
+        const p = authPassword.value.trim();
+        const rp = authRepassword.value.trim();
+        const e = authEmail.value.trim();
+        const ph = authPhone.value.trim();
+
+        if (!u || !p || !rp || !e || !ph) return alert('Thiếu thông tin');
+        if (p !== rp) return alert('Mật khẩu không khớp');
+        if (users[u]) return alert('Tài khoản tồn tại');
+
+        users[u] = { password: p, email: e, phone: ph };
+        localStorage.setItem('users', JSON.stringify(users));
+        alert('Đăng ký thành công');
+        switchMode('login');
+        return;
+    }
+
+    if (authMode === 'forgot') {
+        if (forgotOtp.value !== otpCode) return alert('OTP sai');
+        users[otpUsername].password = newPassword.value;
+        localStorage.setItem('users', JSON.stringify(users));
+        alert('Đổi mật khẩu thành công');
+        switchMode('login');
+        return;
+    }
+
+    const u = authUsername.value.trim();
+    const p = authPassword.value.trim();
+    if (!users[u] || users[u].password !== p)
+        return alert('Sai tài khoản hoặc mật khẩu');
+
+    localStorage.setItem('loggedInUser', u);
+    document.getElementById('loginBtn').innerHTML =
+        `<i class="fa-solid fa-user"></i> ${u}`;
+    closeLogin();
+}
+
+/* ===== AUTO ===== */
+window.addEventListener('load', () => {
+    if (!localStorage.getItem('loggedInUser')) openLogin();
+});
+    function toggleCart() {
+    const cart = document.getElementById('cart-modal-container');
+    if (cart.style.display === 'flex') {
+        cart.style.display = 'none';
+    } else {
+        cart.style.display = 'flex';
+    }
+}
+function reloadAboutVideo() {
+    const iframe = document.querySelector('#about iframe');
+    if (!iframe) return;
+
+    const src = iframe.getAttribute('src');
+    iframe.setAttribute('src', '');
+    setTimeout(() => {
+        iframe.setAttribute('src', src);
+    }, 50);
+}
+let currentGame = null;
+
+function handleDownload() {
+    if (!currentGame) {
+        alert("Lỗi game");
+        return;
+    }
+
+    // GAME MIỄN PHÍ
+    if (currentGame.price === 0) {
+        alert("Game miễn phí! Đang tải...");
+        console.log("Download:", currentGame.title);
+        return;
+    }
+
+    // GAME CÓ PHÍ → ĐƯA VÀO GIỎ
+    addToCart(currentGame);
+    toggleCart();
+    alert("Game có phí, vui lòng thanh toán trong giỏ hàng");
+}
+function handleDownload() {
+    if (!currentGame) {
+        alert("Lỗi game");
+        return;
+    }
+
+    if (currentGame.price === 0) {
+        alert("Game miễn phí! Đang tải...");
+        console.log("Downloading:", currentGame.title);
+    } else {
+        addToCart(currentGame.title, currentGame.price);
+        toggleCart();
+        alert("Game có phí, vui lòng thanh toán trong giỏ hàng");
+    }
+}
+
+    </script>
+    <div id="success-modal" style="
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background:rgba(0,0,0,0.7);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:10000;
+">
+    <div style="
+        background:#111;
+        color:white;
+        width:420px;
+        padding:30px;
+        border-radius:12px;
+        text-align:center;
+        box-shadow:0 0 30px rgba(0,0,0,0.6);
+    ">
+        <i class="fa-solid fa-circle-check" style="font-size:64px;color:#4caf50;"></i>
+        <h2 style="margin:20px 0 10px;">Thanh toán thành công</h2>
+        <p style="color:#ccc;margin-bottom:20px;">
+            Cảm ơn bạn đã mua game
+        </p>
+
+        <button onclick="closeSuccessModal()" style="
+            padding:10px 20px;
+            border:none;
+            border-radius:6px;
+            background:#4caf50;
+            color:white;
+            font-size:15px;
+            cursor:pointer;
+        ">
+            Hoàn tất
+        </button>
+    </div>
+</div>
+<div id="toast" style="
+    position:fixed;
+    bottom:30px;
+    right:30px;
+    background:#222;
+    color:white;
+    padding:18px 26px;
+    border-radius:12px;
+    display:none;
+    z-index:9999;
+
+    font-size:18px;
+    font-weight:600;
+    min-width:320px;
+    text-align:center;
+
+    box-shadow:0 8px 24px rgba(0,0,0,0.45);
+">
+</div>
+<div id="chat-bot-trigger" onclick="toggleChat()" style="position: fixed; bottom: 90px; right: 30px; width: 60px;
+ height: 60px; background: var(--highlight); border-radius: 50%; display: flex; justify-content: center;
+  align-items: center; cursor: pointer; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+    <i class="fa-solid fa-comment-dots" style="color: white; font-size: 24px;"></i>
+</div>
+
+<div id="chat-window" style="display: none; position: fixed; bottom: 100px; right: 30px; width: 350px; height: 450px; background: #0d1624; border: 1px solid #1f2937; border-radius: 15px; flex-direction: column; z-index: 1001; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+    <div style="background: var(--highlight); padding: 15px; color: white; display: flex; justify-content: space-between; align-items: center;">
+        <span><i class="fa-solid fa-robot"></i> GameChemini Bot</span>
+        <i class="fa-solid fa-xmark" onclick="toggleChat()" style="cursor: pointer;"></i>
+    </div>
+    <div id="chat-content" style="flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; font-size: 14px;">
+        <div style="background: #1e293b; padding: 10px; border-radius: 8px; align-self: flex-start; max-width: 80% ;">Chào bạn! Mình có thể giúp gì cho bạn về GameChemini?</div>
+    </div>
+    <div style="padding: 10px; border-top: 1px solid #1f2937; display: flex; gap: 5px;">
+        <input type="text" id="chat-input" placeholder="Nhập tin nhắn..." style="flex: 1; background: #0f1824; border: 1px solid #333; color: white; padding: 8px; border-radius: 5px; outline: none;">
+        <button onclick="sendMessage()" style="background: var(--highlight); border: none; color: white; padding: 8px 15px; border-radius: 5px; cursor: pointer;"><i class="fa-solid fa-paper-plane"></i></button>
+    </div>
+</div>
+
+</body>
+</html>
+
