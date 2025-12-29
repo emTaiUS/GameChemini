@@ -338,6 +338,10 @@
     align-items: center;
     gap: 8px;          /* khoảng cách giữa giỏ và login */
 }
+.logo-img {
+    width: 60px;
+    margin-bottom: 10px;
+}
 
 
         #scroll-top {
@@ -503,12 +507,13 @@
 
 
     <div class="sidebar">
-        <div class="logo">
-            <i class="fa-solid fa-gamepad"></i>
-            <h2>GameChemini</h2>
-        </div>
+<div class="logo">
+    <img src="logo.png" alt="GameChemini Logo" class="logo-img">
+    <h2>GameChemini</h2>
+</div>
+
         <ul class="nav-links">
-            <li><a href="#" onclick="showPage('home')" class="active" id="nav-home">Trang chủ</a></li>
+            <li><a href="#" onclick="showPage('home')" class="active" id="nav-home">Home</a></li>
             <li><a href="#" onclick="showPage('plan')" id="nav-plan">Our Plan</a></li>
             <li><a href="#" onclick="showPage('about')" id="nav-about">About Us</a></li>
             <li><a href="#" onclick="showPage('contact')" id="nav-contact">Contact</a></li>
@@ -718,7 +723,7 @@
                     <div class="video-wrapper">
 <iframe
     id="about-video"
-    src="https://www.youtube.com/embed/3Y3_6t6Cgh4"
+    src="https://www.youtube.com/embed/_gxobjQ4N28"
     title="Giới Thiệu Thành Viên ChatGemini-Nhóm 4"
     Alt="Video Giới Thiệu"
     frameborder="0"
@@ -1926,61 +1931,75 @@ const gamesData = [
     reviews: [{ user: 'HorrorSurvivor', rating: 4.5, comment: 'Sinh tồn kinh dị, bầu không khí căng thẳng.' }]
 }
 ,
-    // Game nhóm (Plan)
-    { id: 'snake', type: 'plan', title: 'Leaping Snake', price: 0,
-        img: 'pic1.PNG',
-        video: 'dQw4w9WgXcQ',
-        genre: 'Arcade',
-        desc: 'Rắn.',
-        specs: {os:'Win 7', cpu:'All', ram:'2GB', vga:'Onboard', storage:'100MB'},
-        reviews: []
-    },
-    { id: 'kiwi', type: 'plan', title: 'Kiwi Bird', price: 0,
-        img: 'kiwi4.png',
-        video: 'dQw4w9WgXcQ',
-        genre: 'Platformer',
-        desc: 'Chim Kiwi.',
-        specs: {os:'Win 7', cpu:'All', ram:'2GB', vga:'Onboard', storage:'150MB'},
-        reviews: []
-    },
- {
+  {
+    id: 'snake',
+    type: 'plan',
+    title: 'Leaping Snake',
+    price: 0,
+    img: 'pic1.PNG',
+    video: 'TKcmQyE0LPg', // Mồi săn rắn
+    genre: 'Arcade',
+    desc: 'Leaping Snake là game rắn cổ điển với lối chơi đơn giản nhưng gây nghiện.',
+    specs: { os:'Win 7', cpu:'All', ram:'2GB', gpu:'Onboard', storage:'100MB' },
+    reviews: [
+        { user: 'Arcade Player', rating: 7.4, comment: 'Gameplay quen thuộc nhưng vẫn rất cuốn.' }
+    ]
+},
+
+{
+    id: 'kiwi',
+    type: 'plan',
+    title: 'Kiwi Bird',
+    price: 0,
+    img: 'kiwi4.png',
+    video: 'JXZ9Z_hCzsM', // KiwiStory
+    genre: 'Platformer',
+    desc: 'Kiwi Bird là game platformer nhẹ nhàng với phong cách dễ thương.',
+    specs: { os:'Win 7', cpu:'All', ram:'2GB', gpu:'Onboard', storage:'150MB' },
+    reviews: [
+        { user: 'Casual Gamer', rating: 7.6, comment: 'Hình ảnh đáng yêu, chơi rất thư giãn.' }
+    ]
+},
+
+{
     id: 'valhelsing',
     type: 'plan',
     title: 'Valhelsing',
     price: 0,
-    img: 'val1.PNG',
-    video: 'dQw4w9WgXcQ',
+    img: 'val1.png',
+    video: 'WJ1ab7EB_zs', // Valhelsing
     genre: 'Survival 2D',
-    desc: 'Valhelsing là game sinh tồn 2D với lối chơi nhặt đồ và chiến đấu với quái vật trong thế giới u ám.',
+    desc: 'Valhelsing là game sinh tồn 2D với lối chơi nhặt đồ và chiến đấu trong thế giới u ám.',
     specs: {
         os: 'Windows 7',
         cpu: 'Intel Core i3',
         ram: '4GB',
-        vga: 'Onboard',
+        gpu: 'Onboard',
         storage: '500MB'
     },
     reviews: [
         { user: 'Indie Dev', rating: 7.5, comment: 'Gameplay sinh tồn đơn giản nhưng gây nghiện.' }
     ]
 },
+
 {
     id: 'pointerdash',
     type: 'plan',
     title: 'Pointer Dash',
     price: 0,
     img: 'pointer dash.jpg',
-    video: 'dQw4w9WgXcQ',
+    video: 'Zoc4nar_3wg', // Pointer Dash & Tic Tac Toe
     genre: 'Arcade / Reflex',
-    desc: 'Pointer Dash là game arcade 2D gây ức chế, yêu cầu phản xạ nhanh và độ chính xác cao. Người chơi điều khiển con trỏ vượt qua chướng ngại vật với nhịp độ nhanh, chỉ một sai lầm nhỏ cũng phải chơi lại từ đầu.',
+    desc: 'Pointer Dash là game arcade 2D yêu cầu phản xạ nhanh và độ chính xác cao.',
     specs: {
         os: 'Windows 7',
         cpu: 'All',
         ram: '2GB',
-        vga: 'Onboard',
+        gpu: 'Onboard',
         storage: '100MB'
     },
     reviews: [
-        { user: 'Player', rating: 7.8, comment: 'Rất khó nhưng chơi rất cuốn, càng thua càng muốn chơi lại.' }
+        { user: 'Player', rating: 7.8, comment: 'Khó nhưng rất cuốn, chơi là không dứt ra được.' }
     ]
 },
 
@@ -1990,18 +2009,18 @@ const gamesData = [
     title: 'Racing Boy',
     price: 0,
     img: 'racing3.jpg',
-    video: 'dQw4w9WgXcQ',
+    video: 'RFnhBr8Diww', // Racing Boy
     genre: 'Racing',
-    desc: 'Racing Boy là game đua xe phong cách arcade với lối chơi đơn giản, tốc độ cao và dễ tiếp cận. Người chơi điều khiển xe vượt qua các chặng đua, né chướng ngại vật và cạnh tranh thời gian để về đích nhanh nhất.',
+    desc: 'Racing Boy là game đua xe arcade tốc độ cao, dễ chơi và giải trí tốt.',
     specs: {
         os: 'Windows 7',
         cpu: 'All',
         ram: '2GB',
-        vga: 'Onboard',
+        gpu: 'Onboard',
         storage: '200MB'
     },
     reviews: [
-        { user: 'Casual Player', rating: 7.6, comment: 'Đua xe nhẹ nhàng, dễ chơi và giải trí tốt.' }
+        { user: 'Casual Player', rating: 7.6, comment: 'Đua xe nhẹ nhàng, chơi giải trí rất ổn.' }
     ]
 },
 
@@ -2010,49 +2029,51 @@ const gamesData = [
     type: 'plan',
     title: 'Xả Stress Cùng Ricon',
     price: 0,
-    img: 'ricon2.PNG',
-    video: 'dQw4w9WgXcQ',
+    img: 'ricon2.png',
+    video: 'qZG4DpFXkag', // Ricon & Warriors Battle
     genre: 'Casual / Arcade',
-    desc: 'Xả Stress Cùng Ricon là game đập chuột giải trí, nơi người chơi phải phản xạ thật nhanh để đập trúng các mục tiêu xuất hiện liên tục. Lối chơi đơn giản, vui nhộn, phù hợp để giải tỏa căng thẳng sau giờ học và làm việc.',
+    desc: 'Game đập chuột vui nhộn, giúp xả stress nhanh sau giờ học.',
     specs: {
         os: 'Windows 7',
         cpu: 'All',
         ram: '2GB',
-        vga: 'Onboard',
+        gpu: 'Onboard',
         storage: '100MB'
     },
     reviews: [
-        { user: 'Casual Gamer', rating: 7.8, comment: 'Gameplay đơn giản, vui và đúng chất xả stress.' }
+        { user: 'Casual Gamer', rating: 7.8, comment: 'Chơi vui, đúng chất xả stress.' }
     ]
 },
+
 {
     id: 'xogame',
     type: 'plan',
-    title: 'XO 3x3',
+    title: 'Tic Tac Toe',
     price: 0,
     img: 'XO.PNG',
-    video: 'dQw4w9WgXcQ',
+    video: 'Zoc4nar_3wg', // Pointer Dash & Tic Tac Toe
     genre: 'Puzzle / Board Game',
-    desc: 'XO 3x3 là game cờ caro kinh điển, nơi hai người chơi lần lượt đánh X và O trên bàn cờ 3x3. Mục tiêu là tạo thành một hàng ngang, dọc hoặc chéo trước đối thủ.',
+    desc: 'XO 3x3 là game cờ caro kinh điển cho 2 người chơi.',
     specs: {
         os: 'Windows 7',
         cpu: 'All',
         ram: '2GB',
-        vga: 'Onboard',
+        gpu: 'Onboard',
         storage: '50MB'
     },
     reviews: [
-        { user: 'Classic Gamer', rating: 7.5, comment: 'Luật chơi đơn giản, phù hợp giải trí nhanh.' }
+        { user: 'Classic Gamer', rating: 7.5, comment: 'Luật đơn giản, chơi nhanh gọn.' }
     ]
-},
+}
+,
 
 {
     id: 'warriorsbattle',
     type: 'plan',
     title: 'Warriors Battle',
     price: 0,
-    img: 'wr.PNG',
-    video: 'videogame (1).mp4',
+    img: 'wr.png',
+    video: '11zqj4QReKM',
     genre: "Beat 'em up / Action 2D",
     desc: 'Warriors Battle là game hành động đánh nhau 2D phong cách bóng đá . Người chơi điều khiển chiến binh chiến đấu với kẻ địch, lụm đồ và vũ khí rơi ra để tăng sức mạnh và chiến thắng đối phương .',
     specs: {
